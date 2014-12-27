@@ -18,6 +18,8 @@
 	git pull\
 -add all changes to be committed\
 	git add .\
+-remove all removed files\
+	git rm 'git ls-files -d'\
 -commit those changes locally\
 	git commit -m "commit message" -a\
 -push changes and commit message from local machine to master server\
