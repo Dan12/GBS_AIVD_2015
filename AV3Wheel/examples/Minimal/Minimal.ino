@@ -1,8 +1,10 @@
 #include <AV3Wheel.h>
 
-AV3Wheel test(9,10,11,12,2);
+AV3Wheel test;
 
-void setup(){}
+void setup(){
+  test.init(9,10,11,12,2);
+}
 
 void loop(){
   test.forward(false, 125, 0, 1000);

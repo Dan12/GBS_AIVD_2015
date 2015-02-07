@@ -3,21 +3,24 @@
 */
 
 #include "Arduino.h"
-#include "Servo.h"
 #include "AV4Wheel.h"
 
-const int WHEEL_CIRCUMFRENCE = 10;
-const int TICKS_PER_ROTATION = 90;
-int encoderPrevVal = LOW;
-Servo steeringServo;
+#define WHEEL_CIRCUMFRENCE 10
+#define TICKS_PER_ROTATION 90
 
-AV4Wheel::AV4Wheel(int m1a, int m1b, int m2a, int m2b, int ep, int sp){
+AV4Wheel::AV4Wheel(){}
+
+void AV4Wheel::init(int m1a, int m1b, int m2a, int m2b, int ep, int sp){
     _motor1A = m1a;
     _motor1B = m1b;
     _motor2A = m2a;
     _motor2B = m2b;
     _encoderPin = ep;
     _servoPin = sp;
+    
+    _hasDifferential = false;
+    
+    _encoderPrevVal = LOW;
     
     pinMode(_motor1A,OUTPUT);
     pinMode(_motor1B,OUTPUT);
@@ -26,26 +29,58 @@ AV4Wheel::AV4Wheel(int m1a, int m1b, int m2a, int m2b, int ep, int sp){
     
     pinMode(_encoderPin,INPUT);
     
-    steeringServo.attach(_servoPin);
+    _steeringServo.attach(_servoPin);
+}
+
+void AV4Wheel::init(int ma, int mb, int ep, int sp){
+    _motor1A = ma;
+    _motor1B = mb;
+    _encoderPin = ep;
+    _servoPin = sp;
+    
+    _hasDifferential = true;
+    
+    _encoderPrevVal = LOW;
+    
+    pinMode(_motor1A,OUTPUT);
+    pinMode(_motor1B,OUTPUT);
+    pinMode(_motor2A,OUTPUT);
+    pinMode(_motor2B,OUTPUT);
+    
+    pinMode(_encoderPin,INPUT);
+    
+    _steeringServo.attach(_servoPin);
 }
 
 void AV4Wheel::move(boolean i, int s, int deg, float d, int t){
     if(i){
-        digitalWrite(_motor1A, LOW);
-        digitalWrite(_motor1B, s);
-        
-        digitalWrite(_motor2A,LOW);
-        digitalWrite(_motor2B,s);
+        if(_hasDifferential){
+            digitalWrite(_motor1A, LOW);
+            digitalWrite(_motor1B, s);
+        }
+        else{
+            digitalWrite(_motor1A, LOW);
+            digitalWrite(_motor1B, s);
+            
+            digitalWrite(_motor2A,LOW);
+            digitalWrite(_motor2B,s);
+        }
     }
     else{
-        digitalWrite(_motor1A, s);
-        digitalWrite(_motor1B, LOW);
-        
-        digitalWrite(_motor2A,s);
-        digitalWrite(_motor2B,LOW);   
+        if(_hasDifferential){
+            digitalWrite(_motor1A, s);
+            digitalWrite(_motor1B, LOW);
+        }
+        else{
+            digitalWrite(_motor1A, s);
+            digitalWrite(_motor1B, LOW);
+            
+            digitalWrite(_motor2A,s);
+            digitalWrite(_motor2B,LOW);
+        }
     }
     
-    steeringServo.write(deg);
+    _steeringServo.write(deg);
     
     if(d==0)
         delay(t);
@@ -58,15 +93,15 @@ void AV4Wheel::move(boolean i, int s, int deg, float d, int t){
 }
 
 void AV4Wheel::_encoderDist(float d){
-    encoderPrevVal = LOW;
+    _encoderPrevVal = LOW;
     int tickToTurn = ((d)/(WHEEL_CIRCUMFRENCE))*(TICKS_PER_ROTATION);
     int ticksTurned = 0;
     while(ticksTurned < tickToTurn){
         int n = digitalRead(_encoderPin);
-        if ((encoderPrevVal == LOW) && (n == HIGH)) {
+        if ((_encoderPrevVal == LOW) && (n == HIGH)) {
             ticksTurned ++;
         } 
-        encoderPrevVal = n;
+        _encoderPrevVal = n;
     }
 }
 
