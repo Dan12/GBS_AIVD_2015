@@ -5,14 +5,13 @@
 #include "Arduino.h"
 #include "AV3Wheel.h"
 
-#define WHEEL_CIRCUMFRENCE 10
 #define TICKS_PER_ROTATION 90
 
 
 AV3Wheel::AV3Wheel(){
 }
 
-void AV3Wheel::init(int m1a, int m1b, int m2a, int m2b, int ep){
+void AV3Wheel::init(int m1a, int m1b, int m2a, int m2b, int ep, float wc){
     _motor1A = m1a;
     _motor1B = m1b;
     _motor2A = m2a;
@@ -20,6 +19,8 @@ void AV3Wheel::init(int m1a, int m1b, int m2a, int m2b, int ep){
     _encoderPin = ep;
 
     _encoderPrevVal = LOW;
+    
+    _wheelCircumfrence = wc;
     
     pinMode(_motor1A,OUTPUT);
     pinMode(_motor1B,OUTPUT);
@@ -108,7 +109,7 @@ void AV3Wheel::circle(boolean i, int s1, int s2, float d, int t){
 
 void AV3Wheel::_encoderDist(float d){
     _encoderPrevVal = LOW;
-    int tickToTurn = ((d)/(WHEEL_CIRCUMFRENCE))*(TICKS_PER_ROTATION);
+    int tickToTurn = ((d)/(_wheelCircumfrence))*(TICKS_PER_ROTATION);
     int ticksTurned = 0;
     while(ticksTurned < tickToTurn){
         int n = digitalRead(_encoderPin);
