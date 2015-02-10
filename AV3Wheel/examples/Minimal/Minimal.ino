@@ -1,11 +1,11 @@
 //Include 3WheelDrive library
 #include <AV3Wheel.h>
 
-//Initialize 3Wheel Drive Object
+//Create 3Wheel Drive Object
 AV3Wheel test;
 
 void setup(){
-  //Setup 3WheelDrive Object
+  //Initialize 3WheelDrive Object
   //Parameters: Motor 1 pin a, Motor 1 pin b, Motor 2 pin a, Motor 2 pin b, Encoder pin, Wheel Circumfrence (in inches)
   test.init(9,10,11,12,2,10.0);
 }

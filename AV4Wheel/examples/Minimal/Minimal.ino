@@ -12,7 +12,7 @@ void setup(){
   test.init(9,10,2,3, 10.0);
   //If 2 motors:
   //Parameters: Motor 1 pin a, Motor 1 pin b, Motor 2 pin a, Motor 2 pin b, Encoder pin, Steering Servo pin, Wheel Circumfrence (in inches)
-  test.init(9,10,11,12,2,3);
+  //test.init(9,10,11,12,2,3);
 }
 
 void loop(){
