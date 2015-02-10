@@ -5,12 +5,11 @@
 #include "Arduino.h"
 #include "AV4Wheel.h"
 
-#define WHEEL_CIRCUMFRENCE 10
 #define TICKS_PER_ROTATION 90
 
 AV4Wheel::AV4Wheel(){}
 
-void AV4Wheel::init(int m1a, int m1b, int m2a, int m2b, int ep, int sp){
+void AV4Wheel::init(int m1a, int m1b, int m2a, int m2b, int ep, int sp, float wc){
     _motor1A = m1a;
     _motor1B = m1b;
     _motor2A = m2a;
@@ -22,6 +21,8 @@ void AV4Wheel::init(int m1a, int m1b, int m2a, int m2b, int ep, int sp){
     
     _encoderPrevVal = LOW;
     
+    _wheelCircumfrence = wc;
+    
     pinMode(_motor1A,OUTPUT);
     pinMode(_motor1B,OUTPUT);
     pinMode(_motor2A,OUTPUT);
@@ -32,7 +33,7 @@ void AV4Wheel::init(int m1a, int m1b, int m2a, int m2b, int ep, int sp){
     _steeringServo.attach(_servoPin);
 }
 
-void AV4Wheel::init(int ma, int mb, int ep, int sp){
+void AV4Wheel::init(int ma, int mb, int ep, int sp, float wc){
     _motor1A = ma;
     _motor1B = mb;
     _encoderPin = ep;
@@ -41,6 +42,8 @@ void AV4Wheel::init(int ma, int mb, int ep, int sp){
     _hasDifferential = true;
     
     _encoderPrevVal = LOW;
+    
+    _wheelCircumfrence = wc;
     
     pinMode(_motor1A,OUTPUT);
     pinMode(_motor1B,OUTPUT);
@@ -94,7 +97,7 @@ void AV4Wheel::move(boolean i, int s, int deg, float d, int t){
 
 void AV4Wheel::_encoderDist(float d){
     _encoderPrevVal = LOW;
-    int tickToTurn = ((d)/(WHEEL_CIRCUMFRENCE))*(TICKS_PER_ROTATION);
+    int tickToTurn = ((d)/(_wheelCircumfrence))*(TICKS_PER_ROTATION);
     int ticksTurned = 0;
     while(ticksTurned < tickToTurn){
         int n = digitalRead(_encoderPin);
