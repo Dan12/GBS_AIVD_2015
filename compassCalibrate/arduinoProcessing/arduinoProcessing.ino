@@ -8,6 +8,7 @@ int angleTrim = 0;
 
 void setup() {
   Serial.begin(9600);
+  Serial.setTimeout(20);
   delay(100);                   // Power up delay
   Wire.begin();
   
