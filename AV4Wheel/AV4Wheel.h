@@ -13,6 +13,7 @@ class AV4Wheel{
         AV4Wheel();
         void move(boolean i, int s, int deg, float d, int t);
         void init(int m1a, int m1b, int m2a, int m2b, int ep, int sp, float wc);
+        void init(int m1, int ep, int sp, float wc);
         void init(int ma, int mb, int ep, int sp, float wc);
     private:
         int _motor1A;
@@ -21,7 +22,7 @@ class AV4Wheel{
         int _motor2B;
         int _encoderPin;
         int _servoPin;
-        int _hasDifferential;
+        int _mode;
         int _encoderPrevVal;
         float _wheelCircumfrence;
         Servo _steeringServo;

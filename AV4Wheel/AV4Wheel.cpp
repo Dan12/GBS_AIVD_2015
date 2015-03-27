@@ -17,7 +17,7 @@ void AV4Wheel::init(int m1a, int m1b, int m2a, int m2b, int ep, int sp, float wc
     _encoderPin = ep;
     _servoPin = sp;
     
-    _hasDifferential = false;
+    _mode = 1;
     
     _encoderPrevVal = LOW;
     
@@ -39,7 +39,7 @@ void AV4Wheel::init(int ma, int mb, int ep, int sp, float wc){
     _encoderPin = ep;
     _servoPin = sp;
     
-    _hasDifferential = true;
+    _mode = 2;
     
     _encoderPrevVal = LOW;
     
@@ -47,8 +47,24 @@ void AV4Wheel::init(int ma, int mb, int ep, int sp, float wc){
     
     pinMode(_motor1A,OUTPUT);
     pinMode(_motor1B,OUTPUT);
-    pinMode(_motor2A,OUTPUT);
-    pinMode(_motor2B,OUTPUT);
+    
+    pinMode(_encoderPin,INPUT);
+    
+    _steeringServo.attach(_servoPin);
+}
+
+void AV4Wheel::init(int m1, int ep, int sp, float wc){
+    _motor1A = m1;
+    _encoderPin = ep;
+    _servoPin = sp;
+    
+    _mode = 3;
+    
+    _encoderPrevVal = LOW;
+    
+    _wheelCircumfrence = wc;
+    
+    pinMode(_motor1A,OUTPUT);
     
     pinMode(_encoderPin,INPUT);
     
@@ -57,29 +73,35 @@ void AV4Wheel::init(int ma, int mb, int ep, int sp, float wc){
 
 void AV4Wheel::move(boolean i, int s, int deg, float d, int t){
     if(i){
-        if(_hasDifferential){
+        if(_mode == 2){
             digitalWrite(_motor1A, LOW);
             digitalWrite(_motor1B, s);
         }
-        else{
+        else if(_mode == 1){
             digitalWrite(_motor1A, LOW);
-            digitalWrite(_motor1B, s);
+            analogWrite(_motor1B, s);
             
             digitalWrite(_motor2A,LOW);
-            digitalWrite(_motor2B,s);
+            analogWrite(_motor2B,s);
+        }
+        else{
+            analogWrite(_motor1A, s);
         }
     }
     else{
-        if(_hasDifferential){
-            digitalWrite(_motor1A, s);
+        if(_mode == 2){
+            analogWrite(_motor1A, s);
             digitalWrite(_motor1B, LOW);
         }
-        else{
-            digitalWrite(_motor1A, s);
+        else if(_mode == 1){
+            analogWrite(_motor1A, s);
             digitalWrite(_motor1B, LOW);
             
-            digitalWrite(_motor2A,s);
+            analogWrite(_motor2A,s);
             digitalWrite(_motor2B,LOW);
+        }
+        else{
+            analogWrite(_motor1A, s);
         }
     }
     
