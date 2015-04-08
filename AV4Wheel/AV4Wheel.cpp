@@ -72,6 +72,10 @@ void AV4Wheel::init(int m1, int ep, int sp, float wc){
 }
 
 void AV4Wheel::move(boolean i, int s, int deg, float d, int t){
+    _steeringServo.write(deg);
+    
+    delay(100);
+    
     if(i){
         if(_mode == 2){
             digitalWrite(_motor1A, LOW);
@@ -105,8 +109,6 @@ void AV4Wheel::move(boolean i, int s, int deg, float d, int t){
         }
     }
     
-    _steeringServo.write(deg);
-    
     if(d==0)
         delay(t);
         
@@ -131,11 +133,19 @@ void AV4Wheel::_encoderDist(float d){
 }
 
 void AV4Wheel::_stopMotion(int t){
-    digitalWrite(_motor1A, LOW);
-    digitalWrite(_motor1B, LOW);
+    if(_mode == 1 || _mode == 2){
+        digitalWrite(_motor1A, LOW);
+        digitalWrite(_motor1B, LOW);
+    }
     
-    digitalWrite(_motor2A,LOW);
-    digitalWrite(_motor2B,LOW);
+    if(_mode == 1){
+        digitalWrite(_motor2A,LOW);
+        digitalWrite(_motor2B,LOW);
+    }
+    
+    if(_mode == 3){
+        analogWrite(_motor1A, 10);
+    }
     
     delay(t);
 }
