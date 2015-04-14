@@ -33,16 +33,16 @@ void AV3Wheel::init(int m1a, int m1b, int m2a, int m2b, int ep, float wc){
 void AV3Wheel::forward(boolean i, int s, float d, int t){
     if(i){
         digitalWrite(_motor1A, LOW);
-        digitalWrite(_motor1B, s);
+        analogWrite(_motor1B, s);
         
         digitalWrite(_motor2A,LOW);
-        digitalWrite(_motor2B,s);
+        analogWrite(_motor2B,s);
     }
     else{
-        digitalWrite(_motor1A, s);
+        analogWrite(_motor1A, s);
         digitalWrite(_motor1B, LOW);
         
-        digitalWrite(_motor2A,s);
+        analogWrite(_motor2A,s);
         digitalWrite(_motor2B,LOW);   
     }
     
@@ -58,17 +58,17 @@ void AV3Wheel::forward(boolean i, int s, float d, int t){
 
 void AV3Wheel::spin(boolean cw, int s, float d, int t){
     if(cw){
-        digitalWrite(_motor1A, s);
+        analogWrite(_motor1A, s);
         digitalWrite(_motor1B, LOW);
         
         digitalWrite(_motor2A,LOW);
-        digitalWrite(_motor2B,s);
+        analogWrite(_motor2B,s);
     }
     else{
         digitalWrite(_motor1A, LOW);
-        digitalWrite(_motor1B, s);
+        analogWrite(_motor1B, s);
         
-        digitalWrite(_motor2A,s);
+        analogWrite(_motor2A,s);
         digitalWrite(_motor2B,LOW);   
     }
     
@@ -83,18 +83,18 @@ void AV3Wheel::spin(boolean cw, int s, float d, int t){
 
 void AV3Wheel::circle(boolean i, int s1, int s2, float d, int t){
     if(i){
-        digitalWrite(_motor1A, s1);
+        analogWrite(_motor1A, s1);
         digitalWrite(_motor1B, LOW);
         
-        digitalWrite(_motor2A,s2);
+        analogWrite(_motor2A,s2);
         digitalWrite(_motor2B,LOW);
     }
     else{
         digitalWrite(_motor1A, LOW);
-        digitalWrite(_motor1B, s1);
+        analogWrite(_motor1B, s1);
         
         digitalWrite(_motor2A,LOW);
-        digitalWrite(_motor2B,s2);   
+        analogWrite(_motor2B,s2);   
     }
         
     if(d==0)
