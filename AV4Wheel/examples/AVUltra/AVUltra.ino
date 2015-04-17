@@ -25,6 +25,6 @@ void loop(){
         
         //Will move in direction specified at duty cycle of 230 and servo at 90 while objects are greater than 30 inches away
         //Parameters: distance(in), move while less than d, reverse motion, duty cycle, servo angle
-        avproto.moveUltra(30, false, false, 230, 90);
+        avproto.moveUltra(8, false, false, 230, 90);
     }
 }
