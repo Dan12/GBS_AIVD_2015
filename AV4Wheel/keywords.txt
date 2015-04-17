@@ -1,3 +1,7 @@
 AV4Wheel	KEYWORD1
 move	KEYWORD2
 init    KEYWORD2
+setServo	KEYWORD2
+initUltra	KEYWORD2
+moveUltra	KEYWORD2
+getUltraIn	KEYWORD2
