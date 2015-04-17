@@ -43,6 +43,8 @@ void AV4Wheel::init(int m1a, int m1b, int m2a, int m2b, int ep, int sp, float wc
     pinMode(_encoderPin,INPUT);
     
     _steeringServo.attach(_servoPin);
+    
+    Serial.begin(9600);
 }
 
 void AV4Wheel::init(int ma, int mb, int ep, int sp, float wc){
@@ -63,6 +65,8 @@ void AV4Wheel::init(int ma, int mb, int ep, int sp, float wc){
     pinMode(_encoderPin,INPUT);
     
     _steeringServo.attach(_servoPin);
+    
+    Serial.begin(9600);
 }
 
 void AV4Wheel::init(int m1, int ep, int sp, float wc){
@@ -81,6 +85,8 @@ void AV4Wheel::init(int m1, int ep, int sp, float wc){
     pinMode(_encoderPin,INPUT);
     
     _steeringServo.attach(_servoPin);
+    
+    Serial.begin(9600);
 }
 
 void AV4Wheel::setServo(int sd){
@@ -105,11 +111,22 @@ void AV4Wheel::initUltra(uint8_t trigger_pin, uint8_t echo_pin, int max_cm_dista
 
 void AV4Wheel::moveUltra(int d, boolean l, boolean i, int s, int deg){
     _diffMove(i,s,deg);
+    
+    int dist = _ping_in();
+    delay(29);
 
     if(l)
-        while(_ping_in() < d){delay(29);}
+        while(dist < d && dist != 0){
+            dist = _ping_in();
+            delay(29);
+            Serial.println(dist);
+        }
     else
-        while(_ping_in() > d){delay(29);}
+        while(dist > d || dist == 0){
+            dist = _ping_in();
+            delay(29);
+            Serial.println(dist);
+        }
 
     _stopMotion(500);
 }
