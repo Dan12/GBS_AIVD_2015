@@ -8,7 +8,7 @@ int buttonPin = 5;
 
 void setup(){
     //Button pin
-    pinMode(buttonPin,INPUT);
+    pinMode(buttonPin,INPUT_PULLUP);
     
     //Parameters: Motor pin a, Encoder pin, Steering Servo pin, Wheel Circumfrenc (in inches)
     avproto.init(11,7,9, 10.0);
