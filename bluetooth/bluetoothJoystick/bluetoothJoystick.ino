@@ -1,4 +1,5 @@
 #include <SoftwareSerial.h>
+#include <NewPing.h>
 
 int TxD = 2;
 int RxD = 3;
@@ -10,6 +11,8 @@ int knobX = 0;
 int knobY = 0;
 
 SoftwareSerial bluetooth(TxD, RxD);
+
+NewPing sonar(12,11,200);
 
 boolean returnMes = false;
 
@@ -23,7 +26,7 @@ void setup(){
   delay(100);
   bluetooth.println("U,9600,N");
   bluetooth.begin(9600);
-  bluetooth.setTimeout(20);
+  bluetooth.setTimeout(30);
 }
 
 void loop()
@@ -48,12 +51,10 @@ void loop()
     returnMes = true;
   }
   else if(returnMes){
-    int distanceAdd = random(11)-5;
-    distance += distanceAdd;
-    if(distance > 170)
-      distance = 170;
-    else if(distance < 50)
-      distance = 50;
+    unsigned int uS = sonar.ping();
+    int distance = uS / US_ROUNDTRIP_IN;
+    if(distance == 0)
+      distance = 200;
     sendInt(distance);
     Serial.println(distance);
     returnMes = false;

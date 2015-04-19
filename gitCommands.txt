@@ -1,0 +1,24 @@
+*from command line*
+
+*Setup*
+-initialize empty repository
+	cd "path to folder you want to create repository in"	
+	git init
+-add global git repository to local empty repository
+	git remote add origin https://...git
+
+*send commits to master(must be done in order). You must first pull all changes*
+-pull all new changes from repository
+	git pull
+-add all changes to be committed
+	git add .
+-remove all removed files
+	git rm 'git ls-files -d'
+-commit those changes locally
+	git commit -m "commit message" -a
+-push changes and commit message from local machine to master server. It will prompt you for a password; enter your bitbucket password (from command line nothing will appear, just hit enter after you have typed in your password).
+	git push -u origin master
+
+*miscellaneous*
+-check git status in folder
+	git status

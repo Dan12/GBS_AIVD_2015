@@ -4,16 +4,16 @@
 
 AV4Wheel avproto;
 
-int buttonPin = 5;
+int buttonPin = 6;
 
 void setup(){
     //Button pin
     pinMode(buttonPin,INPUT_PULLUP);
     
     //Parameters: Motor pin a, Encoder pin, Steering Servo pin, Wheel Circumfrenc (in inches)
-    avproto.init(11,7,9, 10.0);
+    avproto.init(11, 7, 9, 4*3.14);
     //Parameters: Trigger Pin, Echo Pin, Max Distance (cm)
-    avproto.initUltra(8,10, 200);
+    avproto.initUltra(10, 8, 200);
 }
 
 void loop(){
