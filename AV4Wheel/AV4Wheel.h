@@ -19,6 +19,8 @@ class AV4Wheel{
         void initUltra(uint8_t trigger_pin, uint8_t echo_pin, int max_cm_distance);
         void moveUltra(int d, boolean l, boolean i, int s, int deg);
         int getUltraIn();
+        void diffMove(boolean i, int s, int deg);
+        void stopMotion(int t);
     private:
         int _motor1A;
         int _motor1B;
@@ -33,8 +35,6 @@ class AV4Wheel{
         float _wheelCircumfrence;
         Servo _steeringServo;
         void _encoderDist(float d);
-        void _stopMotion(int t);
-        void _diffMove(boolean i, int s, int deg);
         int _ping_in();
         uint8_t _triggerBit;
         uint8_t _echoBit;

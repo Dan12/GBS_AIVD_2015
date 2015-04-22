@@ -3,15 +3,9 @@
 int TxD = 2;
 int RxD = 3;
 
-int distance = 100;
-
-int angle = 90;
-int knobX = 0;
-int knobY = 0;
-
 SoftwareSerial bluetooth(TxD, RxD);
 
-boolean returnMes = false;
+AV4Wheel avproto;
 
 void setup(){
   //Setup usb serial connection to computer
@@ -24,6 +18,9 @@ void setup(){
   bluetooth.println("U,9600,N");
   bluetooth.begin(9600);
   bluetooth.setTimeout(20);
+  
+  //Parameters: Motor pin a, Encoder pin, Steering Servo pin, Wheel Circumfrenc (in inches)
+  avproto.init(11,7,9, 4*3.14);
 }
 
 void loop()
@@ -33,6 +30,14 @@ void loop()
   {
     char c = bluetooth.read();
     Serial.println(c);
-    Serial.println(c == 'f');
+    if(c == 'f'){
+      avproto.diffMove(false,230,90);
+    }
+    else if(c == 'r'){
+      avproto.diffMove(false,230,180);
+    }
+    else if(c == 'l'){
+      avproto.diffMove(false,230,0);
+    }
   }
 }

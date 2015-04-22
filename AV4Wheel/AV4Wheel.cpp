@@ -127,7 +127,7 @@ int AV4Wheel::getUltraIn(){
 }
 
 void AV4Wheel::move(boolean i, int s, int deg, float d, int t){
-    _diffMove(i,s,deg);
+    diffMove(i,s,deg);
     
     if(d==0)
         delay(t);
@@ -136,10 +136,10 @@ void AV4Wheel::move(boolean i, int s, int deg, float d, int t){
         _encoderDist(d);
     }
     
-    _stopMotion(500);
+    stopMotion(500);
 }
 
-void AV4Wheel::_diffMove(boolean i, int s, int deg){
+void AV4Wheel::diffMove(boolean i, int s, int deg){
     _steeringServo.write(deg);
     
     delay(200);
@@ -191,7 +191,7 @@ void AV4Wheel::_encoderDist(float d){
     }
 }
 
-void AV4Wheel::_stopMotion(int t){
+void AV4Wheel::stopMotion(int t){
     if(_mode == 1 || _mode == 2){
         digitalWrite(_motor1A, LOW);
         digitalWrite(_motor1B, LOW);

@@ -1,10 +1,16 @@
 #include <SoftwareSerial.h>
 #include <NewPing.h>
 
+#include <Servo.h>
+#include <AV4Wheel.h>
+
+AV4Wheel avproto;
+
 int TxD = 2;
 int RxD = 3;
 
-int distance = 100;
+int maxDistance = 200;
+int distance = maxDistance;
 
 int angle = 90;
 int knobX = 0;
@@ -12,7 +18,8 @@ int knobY = 0;
 
 SoftwareSerial bluetooth(TxD, RxD);
 
-NewPing sonar(12,11,200);
+Servo ultraServo;
+int ultraServoPin = 4;
 
 boolean returnMes = false;
 
@@ -27,6 +34,14 @@ void setup(){
   bluetooth.println("U,9600,N");
   bluetooth.begin(9600);
   bluetooth.setTimeout(30);
+  
+  //Parameters: Motor pin a, Encoder pin, Steering Servo pin, Wheel Circumfrenc (in inches)
+  avproto.init(11,7,9, 4*3.14);
+  //Parameters: Trigger Pin, Echo Pin, Max Distance (cm)
+  avproto.initUltra(10, 8, maxDistance);
+  
+  ultraServo.attach(ultraServoPin);
+  ultraServo.write(90);
 }
 
 void loop()
@@ -49,16 +64,27 @@ void loop()
     Serial.println(knobY);
     Serial.println("*");
     returnMes = true;
+    setMotion();
   }
   else if(returnMes){
-    unsigned int uS = sonar.ping();
-    int distance = uS / US_ROUNDTRIP_IN;
+    int distance = getUltraIn();
     if(distance == 0)
-      distance = 200;
+      distance = maxDistance;
     sendInt(distance);
     Serial.println(distance);
     returnMes = false;
   }
+}
+
+void setMotion(){
+  int moveSpeed = constrain(map(knobY,-200,200,-255,255),-255,255);
+  int moveAngle = constrain(map(knobX,-200,200,0,180),0,180);
+  boolean reverse = moveSpeed < 0;
+  moveSpeed = abs(moveSpeed);
+  
+  avproto.diffMove(reverse,moveSpeed,moveAngle);
+  
+  ultraServo.write(angle);
 }
 
 void sendInt(int d){
