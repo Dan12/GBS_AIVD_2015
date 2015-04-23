@@ -104,7 +104,11 @@ void AV4Wheel::initUltra(uint8_t trigger_pin, uint8_t echo_pin, int max_cm_dista
 }
 
 void AV4Wheel::moveUltra(int d, boolean l, boolean i, int s, int deg){
-    diffMove(i,s,deg);
+    setServo(deg);
+    
+    delay(200);
+    
+    diffMove(i,s);
     
     int dist = _ping_in();
     delay(29);
@@ -127,7 +131,11 @@ int AV4Wheel::getUltraIn(){
 }
 
 void AV4Wheel::move(boolean i, int s, int deg, float d, int t){
-    diffMove(i,s,deg);
+    setServo(deg);
+    
+    delay(200);
+    
+    diffMove(i,s);
     
     if(d==0)
         delay(t);
@@ -139,11 +147,7 @@ void AV4Wheel::move(boolean i, int s, int deg, float d, int t){
     stopMotion(500);
 }
 
-void AV4Wheel::diffMove(boolean i, int s, int deg){
-    _steeringServo.write(deg);
-    
-    delay(200);
-    
+void AV4Wheel::diffMove(boolean i, int s){
     if(i){
         if(_mode == 2){
             digitalWrite(_motor1A, LOW);

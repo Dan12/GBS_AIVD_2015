@@ -28,18 +28,18 @@ void setup(){
 void loop()
 {
   //Read from bluetooth and write to usb serial
-  if(bluetooth.available())
-  {
+  if(bluetooth.available()){
     char c = bluetooth.read();
     Serial.println(c);
     if(c == 'f'){
-      avproto.diffMove(false,230,90);
+      avproto.setServo(90);
     }
     else if(c == 'r'){
-      avproto.diffMove(false,230,180);
+      avproto.setServo(135);
     }
     else if(c == 'l'){
-      avproto.diffMove(false,230,0);
+      avproto.setServo(55);
     }
+    avproto.diffMove(false,230);
   }
 }

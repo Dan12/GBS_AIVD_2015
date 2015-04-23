@@ -19,7 +19,7 @@ class AV4Wheel{
         void initUltra(uint8_t trigger_pin, uint8_t echo_pin, int max_cm_distance);
         void moveUltra(int d, boolean l, boolean i, int s, int deg);
         int getUltraIn();
-        void diffMove(boolean i, int s, int deg);
+        void diffMove(boolean i, int s);
         void stopMotion(int t);
     private:
         int _motor1A;

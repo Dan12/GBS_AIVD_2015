@@ -21,6 +21,8 @@ int ultraServoPin = 4;
 
 boolean returnMes = false;
 
+boolean isProto = true;
+
 void setup(){
   //Setup usb serial connection to computer
   Serial.begin(9600);
@@ -80,7 +82,23 @@ void setMotion(){
   boolean reverse = moveSpeed < 0;
   moveSpeed = abs(moveSpeed);
   
-  avproto.diffMove(reverse,moveSpeed,moveAngle);
+  if(isProto){
+    if(moveSpeed != 0){
+      if(reverse){
+        moveSpeed.map(moveSpeed,0,255,170,90);
+      }
+      else{
+        moveSpeed.map(moveSpeed,0,255,200,250);
+      }
+    }
+    else{
+      moveSpeed = 10;
+    }
+    reverse = false;
+  }
+  
+  avproto.setServo(moveAngle);
+  avproto.diffMove(reverse,moveSpeed);
   
   ultraServo.write(angle);
 }
