@@ -78,17 +78,17 @@ void loop()
 
 void setMotion(){
   int moveSpeed = constrain(map(knobY,-200,200,-255,255),-255,255);
-  int moveAngle = constrain(map(knobX,-200,200,0,180),0,180);
+  int moveAngle = constrain(map(knobX,-200,200,55,135),55,135);
   boolean reverse = moveSpeed < 0;
   moveSpeed = abs(moveSpeed);
   
   if(isProto){
     if(moveSpeed != 0){
       if(reverse){
-        moveSpeed.map(moveSpeed,0,255,170,90);
+        moveSpeed = map(moveSpeed,0,255,170,90);
       }
       else{
-        moveSpeed.map(moveSpeed,0,255,200,250);
+        moveSpeed = map(moveSpeed,0,255,200,250);
       }
     }
     else{
