@@ -104,7 +104,7 @@ void AV4Wheel::initUltra(uint8_t trigger_pin, uint8_t echo_pin, int max_cm_dista
 }
 
 void AV4Wheel::moveUltra(int d, boolean l, boolean i, int s, int deg){
-    _diffMove(i,s,deg);
+    diffMove(i,s,deg);
     
     int dist = _ping_in();
     delay(29);
@@ -120,7 +120,7 @@ void AV4Wheel::moveUltra(int d, boolean l, boolean i, int s, int deg){
             delay(29);
         }
 
-    _stopMotion(500);
+    stopMotion(500);
 }
 int AV4Wheel::getUltraIn(){
     return _ping_in();

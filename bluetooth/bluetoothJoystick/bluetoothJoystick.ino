@@ -1,6 +1,4 @@
 #include <SoftwareSerial.h>
-#include <NewPing.h>
-
 #include <Servo.h>
 #include <AV4Wheel.h>
 
@@ -67,7 +65,7 @@ void loop()
     setMotion();
   }
   else if(returnMes){
-    int distance = getUltraIn();
+    int distance = avproto.getUltraIn();
     if(distance == 0)
       distance = maxDistance;
     sendInt(distance);
