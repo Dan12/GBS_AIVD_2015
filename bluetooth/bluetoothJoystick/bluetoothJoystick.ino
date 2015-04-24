@@ -14,6 +14,8 @@ int angle = 90;
 int knobX = 0;
 int knobY = 0;
 
+int distScale = 10;
+
 SoftwareSerial bluetooth(TxD, RxD);
 
 Servo ultraServo;
@@ -70,6 +72,7 @@ void loop()
     int distance = avproto.getUltraIn();
     if(distance == 0)
       distance = maxDistance;
+    distance*=distScale;
     sendInt(distance);
     Serial.println(distance);
     returnMes = false;
@@ -81,6 +84,10 @@ void setMotion(){
   int moveAngle = constrain(map(knobX,-200,200,55,135),55,135);
   boolean reverse = moveSpeed < 0;
   moveSpeed = abs(moveSpeed);
+  Serial.print("*");
+  Serial.print(knobX);
+  Serial.print(moveAngle);
+  Serial.println("*");
   
   if(isProto){
     if(moveSpeed != 0){
