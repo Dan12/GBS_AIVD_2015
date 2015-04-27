@@ -85,8 +85,7 @@ public class MainActivity extends Activity {
         			if(dv.connectButton.touchButton(tX, tY)){
         				try{
     					  findBT();
-                          if(mmDevice != null) {
-                              openBT();
+                          if(mmOutputStream != null) {
                               sendData("90,0,0");
                           }
     					}
@@ -141,10 +140,14 @@ public class MainActivity extends Activity {
         {
             for(BluetoothDevice device : pairedDevices)
             {
-                if(device.getName().equals("HC-06")) 
-                {
-                    mmDevice = device;
+                System.out.println(device.getName());
+                mmDevice = device;
+                try {
+                    openBT();
+                    System.out.println("success here");
                     break;
+                } catch (IOException e) {
+                    Toast.makeText(getApplicationContext(), "Failed to open device",Toast.LENGTH_LONG).show();
                 }
             }
         }
@@ -153,7 +156,7 @@ public class MainActivity extends Activity {
     
     void openBT() throws IOException{
         UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb"); //Standard SerialPortService ID
-        mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);        
+        mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
         mmSocket.connect();
         mmOutputStream = mmSocket.getOutputStream();
         mmInputStream = mmSocket.getInputStream();

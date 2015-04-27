@@ -41,6 +41,8 @@ public class CameraPreviewView extends SurfaceView implements Callback, Camera.P
     NumberSlider clearNoiseSlider;
     NumberSlider showSquareSlider;
     NumberSlider showCircleSlider;
+    NumberSlider showMenuSlider;
+    NumberSlider connectSlider;
     
     ArrayList<HighlightedPixels> hpArray;
     HighlightedCircle hC;
@@ -53,6 +55,8 @@ public class CameraPreviewView extends SurfaceView implements Callback, Camera.P
     boolean willShowCircle = true;
 
     boolean sendData = false;
+
+    boolean menuView = false;
     
     public CameraPreviewView(Context context, AttributeSet attrs) {
     	super(context, attrs);
@@ -69,12 +73,14 @@ public class CameraPreviewView extends SurfaceView implements Callback, Camera.P
         hpArray = new ArrayList<HighlightedPixels>();
         hC = new HighlightedCircle(0, 0, 0);
         
-        toleranceSlider = new NumberSlider(1, 40, 15, 670, 30, 100, 30, "Tolerance");
-        resolutionSlider = new NumberSlider(1, 20, 4, 670, 110, 100, 30, "Resolution");
-        zoomSlider = new NumberSlider(0, 30, 0, 670, 190, 100, 30, "Zoom");
-        clearNoiseSlider = new NumberSlider(0, 1, 0, 670, 270, 100, 30, "Clear Noise");
-        showSquareSlider = new NumberSlider(0, 1, 0, 670, 350, 100, 30, "Show Squares");
-        showCircleSlider = new NumberSlider(0, 1, 1, 670, 420, 100, 30, "Show Circle");
+        toleranceSlider = new NumberSlider(1, 40, 15, 100, 30, 150, 40, "Tolerance");
+        resolutionSlider = new NumberSlider(1, 20, 4, 100, 130, 150, 40, "Resolution");
+        zoomSlider = new NumberSlider(0, 30, 0, 100, 230, 150, 40, "Zoom");
+        connectSlider = new NumberSlider(0, 1, 0, 100, 330, 150, 40, "Connect");
+        clearNoiseSlider = new NumberSlider(0, 1, 0, 300, 30, 150, 40, "Clear Noise");
+        showSquareSlider = new NumberSlider(0, 1, 0, 300, 130, 150, 40, "Show Squares");
+        showCircleSlider = new NumberSlider(0, 1, 1, 300, 230, 150, 40, "Show Circle");
+        showMenuSlider = new NumberSlider(0, 1, 0, 650, 30, 150, 40, "Show Menu");
     }
 
     @Override
@@ -102,63 +108,83 @@ public class CameraPreviewView extends SurfaceView implements Callback, Camera.P
         	hC.drawCircle(canvas);
 
         sendData = true;
-        
-        toleranceSlider.drawSlider(canvas);
-        tolerance = toleranceSlider.sVal;
-        resolutionSlider.drawSlider(canvas);
-        startResolution = resolutionSlider.sVal;
-        drawResolution = resolutionSlider.sVal;
-        zoomSlider.drawSlider(canvas);
-        clearNoiseSlider.drawSlider(canvas);
-        if(clearNoiseSlider.sVal > 0)
-        	willClearNoise = true;
-        else
-        	willClearNoise = false;
-        showSquareSlider.drawSlider(canvas);
-        if(showSquareSlider.sVal > 0)
-        	willShowSquares = true;
-        else
-        	willShowSquares = false;
-        showCircleSlider.drawSlider(canvas);
-        if(showCircleSlider.sVal > 0)
-        	willShowCircle = true;
-        else
-        	willShowCircle = false;
+
+        if(menuView) {
+            paint.setARGB(150,250,250,250);
+            canvas.drawRect(0,0,width,height,paint);
+            toleranceSlider.drawSlider(canvas);
+            tolerance = toleranceSlider.sVal;
+            resolutionSlider.drawSlider(canvas);
+            startResolution = resolutionSlider.sVal;
+            drawResolution = resolutionSlider.sVal;
+            zoomSlider.drawSlider(canvas);
+            clearNoiseSlider.drawSlider(canvas);
+            if (clearNoiseSlider.sVal > 0)
+                willClearNoise = true;
+            else
+                willClearNoise = false;
+            showSquareSlider.drawSlider(canvas);
+            if (showSquareSlider.sVal > 0)
+                willShowSquares = true;
+            else
+                willShowSquares = false;
+            showCircleSlider.drawSlider(canvas);
+            if (showCircleSlider.sVal > 0)
+                willShowCircle = true;
+            else
+                willShowCircle = false;
+            connectSlider.drawSlider(canvas);
+        }
+
+        showMenuSlider.drawSlider(canvas);
         
         super.invalidate();
     }
     
     public void touchDown(int x, int y){
-    	if(x >= 0 && x < width && y >= 0 && y < height){
-    		int blue = pixelColorInts[x][y]/1000000;
-        	int green = (pixelColorInts[x][y]-(blue*1000000))/1000;
-        	int red = (pixelColorInts[x][y]-((green*1000)+(blue*1000000)));
-        	targetColor[0] = red;
-            targetColor[1] = green;
-            targetColor[2] = blue;
-    		System.out.println(targetColor);
-    	}
-    	toleranceSlider.touchSlider(x, y);
-    	resolutionSlider.touchSlider(x, y);
-    	zoomSlider.touchSlider(x, y);
-    	Camera.Parameters p = mCamera.getParameters();
-    	p.setZoom(zoomSlider.sVal);
-    	mCamera.setParameters(p);
-    	clearNoiseSlider.touchSlider(x, y);
-    	showSquareSlider.touchSlider(x, y);
-    	showCircleSlider.touchSlider(x, y);
+        showMenuSlider.touchSlider(x, y);
+        if(showMenuSlider.sVal == 1)
+            menuView = true;
+        else
+            menuView = false;
+        if(!menuView) {
+            if (x >= 0 && x < width && y >= 0 && y < height) {
+                int blue = pixelColorInts[x][y] / 1000000;
+                int green = (pixelColorInts[x][y] - (blue * 1000000)) / 1000;
+                int red = (pixelColorInts[x][y] - ((green * 1000) + (blue * 1000000)));
+                targetColor[0] = red;
+                targetColor[1] = green;
+                targetColor[2] = blue;
+                System.out.println(targetColor);
+            }
+        }
+        else {
+            toleranceSlider.touchSlider(x, y);
+            resolutionSlider.touchSlider(x, y);
+            zoomSlider.touchSlider(x, y);
+            Camera.Parameters p = mCamera.getParameters();
+            p.setZoom(zoomSlider.sVal);
+            mCamera.setParameters(p);
+            clearNoiseSlider.touchSlider(x, y);
+            showSquareSlider.touchSlider(x, y);
+            showCircleSlider.touchSlider(x, y);
+            connectSlider.touchSlider(x, y);
+        }
     }
     
     public void touchMove(int x, int y){
-    	toleranceSlider.touchSlider(x, y);
-    	resolutionSlider.touchSlider(x, y);
-    	zoomSlider.touchSlider(x, y);
-    	Camera.Parameters p = mCamera.getParameters();
-    	p.setZoom(zoomSlider.sVal);
-    	mCamera.setParameters(p);
-    	clearNoiseSlider.touchSlider(x, y);
-    	showSquareSlider.touchSlider(x, y);
-    	showCircleSlider.touchSlider(x, y);
+        if(menuView) {
+            toleranceSlider.touchSlider(x, y);
+            resolutionSlider.touchSlider(x, y);
+            zoomSlider.touchSlider(x, y);
+            Camera.Parameters p = mCamera.getParameters();
+            p.setZoom(zoomSlider.sVal);
+            mCamera.setParameters(p);
+            clearNoiseSlider.touchSlider(x, y);
+            showSquareSlider.touchSlider(x, y);
+            showCircleSlider.touchSlider(x, y);
+            connectSlider.touchSlider(x, y);
+        }
     }
 
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -330,8 +356,7 @@ public class CameraPreviewView extends SurfaceView implements Callback, Camera.P
                         hpArray.add(temp.get(i));
                     }
                 }
-                
-                outerloop:
+
                 for(int i = 0; i < hpArray.size(); i++){
                     int tempX = hpArray.get(i).hXPos;
                     int tempY = hpArray.get(i).hYPos;

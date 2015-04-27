@@ -35,10 +35,16 @@ void loop()
       avproto.setServo(90);
     }
     else if(c == 'r'){
-      avproto.setServo(135);
+      avproto.setServo(125);
+    }
+    else if(c == 'g'){
+      avproto.setServo(110);
     }
     else if(c == 'l'){
       avproto.setServo(55);
+    }
+    else if(c == 'd'){
+      avproto.setServo(70);
     }
     avproto.diffMove(false,230);
   }

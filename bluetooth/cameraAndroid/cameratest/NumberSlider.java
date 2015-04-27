@@ -17,7 +17,7 @@ public class NumberSlider {
 	String sTitle;
 	
 	int sPadding = 4;
-	int sTextSize = 20;
+	int sTextSize = 34;
 	
 	Paint paint = new Paint();
 	

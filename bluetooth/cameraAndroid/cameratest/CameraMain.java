@@ -31,12 +31,8 @@ public class CameraMain extends Activity
     OutputStream mmOutputStream;
     InputStream mmInputStream;
     Thread workerThread;
-    byte[] readBuffer;
-    int readBufferPosition;
-    int counter;
     volatile boolean stopWorker;
-    int restartCount = 0;
-    String fullMessage = "";
+    int centerTolerance = 100;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) 
@@ -56,15 +52,6 @@ public class CameraMain extends Activity
         surfaceView.setLayoutParams(layoutParams);
         mRelativeLayout.addView(surfaceView);
         setContentView(mRelativeLayout);
-
-        try {
-            findBT();
-            if (mmDevice != null) {
-                openBT();
-                sendData("90,0,0");
-            }
-        }
-        catch(IOException e){}
     }
 
     @Override 
@@ -73,11 +60,21 @@ public class CameraMain extends Activity
     		int x = (int) e.getX();
     		int y = (int) e.getY();
     		surfaceView.touchDown(x,y);
+            if(surfaceView.menuView && surfaceView.connectSlider.sVal == 1){
+                if(mmOutputStream == null)
+                    findBT();
+                surfaceView.connectSlider.sVal = 0;
+            }
 		}
     	if(e.getAction() == MotionEvent.ACTION_MOVE){
     		int x = (int) e.getX();
     		int y = (int) e.getY();
     		surfaceView.touchMove(x,y);
+            if(surfaceView.menuView && surfaceView.connectSlider.sVal == 1){
+                if(mmOutputStream == null)
+                    findBT();
+                surfaceView.connectSlider.sVal = 0;
+            }
     	}
     	return true;
     };
@@ -98,14 +95,27 @@ public class CameraMain extends Activity
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
         if(pairedDevices.size() > 0)
         {
+            boolean success = false;
+            searchloop:
             for(BluetoothDevice device : pairedDevices)
             {
-                if(device.getName().equals("HC-06"))
-                {
-                    mmDevice = device;
-                    break;
+                System.out.println(device.getName());
+                if(mmOutputStream != null) {
+                    success = true;
+                    break searchloop;
+                }
+                mmDevice = device;
+                try {
+                    openBT();
+                    System.out.println("success here");
+                    success = true;
+                    break searchloop;
+                } catch (IOException e) {
+                    System.out.println("Failed");
                 }
             }
+            if(!success)
+                Toast.makeText(getApplicationContext(), "Failed to open device",Toast.LENGTH_SHORT).show();
         }
         System.out.println("Bluetooth Device Found");
     }
@@ -130,39 +140,18 @@ public class CameraMain extends Activity
                 while(!Thread.currentThread().isInterrupted() && !stopWorker){
                     try {
                         if(surfaceView.sendData == true) {
-                            if (surfaceView.hC.cCXPos < (surfaceView.width / 2) - 80)
-                                sendData("r");
-                            else if (surfaceView.hC.cCXPos > (surfaceView.width / 2) + 80)
+                            if (surfaceView.hC.cCXPos < (surfaceView.width / 2) - centerTolerance)
                                 sendData("l");
+                            else if (surfaceView.hC.cCXPos > (surfaceView.width / 2) + centerTolerance)
+                                sendData("r");
+                            else if (surfaceView.hC.cCXPos < (surfaceView.width / 2) - centerTolerance/2)
+                                sendData("d");
+                            else if (surfaceView.hC.cCXPos > (surfaceView.width / 2) + centerTolerance/2)
+                                sendData("g");
                             else
                                 sendData("f");
                             surfaceView.sendData = false;
                         }
-
-//                        int bytesAvailable = mmInputStream.available();
-//                        if(bytesAvailable > 0){
-//                            byte[] packetBytes = new byte[bytesAvailable];
-//                            mmInputStream.read(packetBytes);
-//                            for(int i=0;i<bytesAvailable;i++){
-//                                byte b = packetBytes[i];
-//                                if(b != 10 && b != 13){
-//                                    byte[] encodedBytes = new byte[1];
-//                                    encodedBytes[0] = b;
-//                                    String data = new String(encodedBytes, "US-ASCII");
-//                                    if(!data.equals("*"))
-//                                        fullMessage+=data;
-//                                    else{
-//                                        int finalVal = (Integer.parseInt(fullMessage,10));
-//                                        String displayMes = String.format("%d", finalVal);
-//                                        System.out.println("*"+displayMes+"*");
-//                                        dv.distance = finalVal;
-//                                        dv.updateAngle = true;
-//                                        sendData(String.format("%d,%d,%d", dv.angle,dv.knobXDisp,dv.knobYDisp));
-//                                        fullMessage = "";
-//                                    }
-//                                }
-//                            }
-//                        }
 
                     }
                     catch (IOException ex) {stopWorker = true;}

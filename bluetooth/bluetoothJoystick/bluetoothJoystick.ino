@@ -81,7 +81,7 @@ void loop()
 
 void setMotion(){
   int moveSpeed = constrain(map(knobY,-200,200,-255,255),-255,255);
-  int moveAngle = constrain(map(knobX,-200,200,55,135),55,135);
+  int moveAngle = constrain(map(knobX,-200,200,55,125),55,125);
   boolean reverse = moveSpeed < 0;
   moveSpeed = abs(moveSpeed);
   Serial.print("*");
