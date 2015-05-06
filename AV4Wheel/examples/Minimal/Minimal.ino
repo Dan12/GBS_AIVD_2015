@@ -10,7 +10,7 @@ void setup(){
   //Initializing 4WheelDrive
   //If 1 motor:
   //If 2 Motor Pins:
-  //Parameters: Motor pin a, Motor pin b, Encoder pin, Steering Servo pin, Wheel Circumfrenc (in inches)
+  //Parameters: Motor pin a(dirn), Motor pin b(pwm), Encoder pin, Steering Servo pin, Wheel Circumfrenc (in inches)
   test.init(9,10,2,3, 10.0);
   //If 1 Motor Pin:
   //Parameters: Motor pin a, Encoder pin, Steering Servo pin, Wheel Circumfrenc (in inches)

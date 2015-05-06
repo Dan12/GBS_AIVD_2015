@@ -151,7 +151,7 @@ void AV4Wheel::diffMove(boolean i, int s){
     if(i){
         if(_mode == 2){
             digitalWrite(_motor1A, LOW);
-            digitalWrite(_motor1B, s);
+            analogWrite(_motor1B, s);
         }
         else if(_mode == 1){
             digitalWrite(_motor1A, LOW);
@@ -166,15 +166,15 @@ void AV4Wheel::diffMove(boolean i, int s){
     }
     else{
         if(_mode == 2){
-            analogWrite(_motor1A, s);
-            digitalWrite(_motor1B, LOW);
+            digitalWrite(_motor1A, HIGH);
+            analogWrite(_motor1B, s);
         }
         else if(_mode == 1){
-            analogWrite(_motor1A, s);
-            digitalWrite(_motor1B, LOW);
+            digitalWrite(_motor1A, HIGH);
+            analogWrite(_motor1B, s);
             
-            analogWrite(_motor2A,s);
-            digitalWrite(_motor2B,LOW);
+            digitalWrite(_motor2A,HIGH);
+            analogWrite(_motor2B,s);
         }
         else{
             analogWrite(_motor1A, s);
