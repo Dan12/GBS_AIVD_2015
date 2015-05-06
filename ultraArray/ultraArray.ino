@@ -12,8 +12,8 @@ AV4Wheel ultras[NumUltras] = {
   AV4Wheel()
 };
 
-int triggerPins[NumUltras] = {1,3,5,8};
-int echoPins[NumUltras] = {2,4,6,10};
+int triggerPins[NumUltras] = {1,12,5,10};
+int echoPins[NumUltras] = {2,13 ,6,8);
 
 //Max distance in cm
 int maxDistance = 200;
@@ -25,6 +25,7 @@ void setup() {
   for(int i = 0; i < NumUltras; i++){
     ultras[i].initUltra(triggerPins[i],echoPins[i],maxDistance);
   }
+  Serial.begin(9600);
 }
 
 void loop() {
@@ -32,5 +33,8 @@ void loop() {
   int distances[NumUltras];
   for(int i = 0; i < NumUltras; i++){
     distances[i] = ultras[i].getUltraIn();
+    Serial.print(i); Serial.print(": "); Serial.println(distances[i]);
+    delay(10);
   }
+  
 }

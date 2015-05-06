@@ -2,21 +2,24 @@
 
 Servo test;
 
-int servoPin = 6;
+int center = 101;
+int servoPin = 9;
+int servoAdd = 45;
+int servoSubtract = 30;
 
 void setup() {
   // put your setup code here, to run once:
-  test.attach(servoPin,500,2000);
+  test.attach(servoPin);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  test.write(90);
+  test.write(center);
   delay(1500);
-  test.write(0);
+ // test.write(center+servoAdd);
   delay(1500);
-  test.write(90);
+  test.write(center);
   delay(1500);
-  test.write(180);
+  //test.write(center-servoSubtract);
   delay(1500);
 }
