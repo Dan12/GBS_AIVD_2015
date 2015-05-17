@@ -19,7 +19,11 @@
 #define ECHO_TIMER_FREQ 24      // Frequency to check for a ping echo (every 24uS is about 0.4cm accuracy).
 #define PING_MEDIAN_DELAY 29    // Millisecond delay between pings in the ping_median method.
 
-AV4Wheel::AV4Wheel(){}
+volatile int _interruptTickCounter;
+
+AV4Wheel::AV4Wheel(){
+    _usingInterruptEncoder = false;
+}
 
 void AV4Wheel::init(int m1a, int m1b, int m2a, int m2b, int ep, int sp, float wc){
     _motor1A = m1a;
@@ -126,14 +130,46 @@ void AV4Wheel::moveUltra(int d, boolean l, boolean i, int s, int deg){
 
     stopMotion(500);
 }
+
+void AV4Wheel::rampMotion(int s, int e, int st, int de, boolean r){
+    if(e > s){
+        for(int i = s; i <= e; i+=st){
+            diffMove(r,i);
+            delay(de);
+        }
+    }
+    else{
+        for(int i = s; i >= e; i-=st){
+            diffMove(r,i);
+            delay(de);
+        }
+    }
+    diffMove(r,e);
+}
+
+void AV4Wheel::moveRampMotion(int s, int e, int st, float de, int di, boolean r, boolean dn){
+    int ticksToTurn = ((di)/(_wheelCircumfrence))*(TICKS_PER_ROTATION);
+    _interruptTickCounter = 0;
+    rampMotion(s,e,st,de,r);
+    int ticksLeft = 0;
+    if(dn)
+        ticksLeft = ticksToTurn-(_interruptTickCounter*2);
+    else
+        ticksLeft = ticksToTurn-(_interruptTickCounter);
+    _interruptTickCounter = 0;
+    diffMove(e,r);
+    _encoderTicks(ticksLeft);
+    if(dn)
+        rampMotion(e,s,st,de,r);
+
+}
+
 int AV4Wheel::getUltraIn(){
     return _ping_in();
 }
 
 void AV4Wheel::move(boolean i, int s, int deg, float d, int t){
     setServo(deg);
-    
-    delay(200);
     
     diffMove(i,s);
     
@@ -143,8 +179,6 @@ void AV4Wheel::move(boolean i, int s, int deg, float d, int t){
     else if(t == 0){
         _encoderDist(d);
     }
-    
-    stopMotion(500);
 }
 
 void AV4Wheel::diffMove(boolean i, int s){
@@ -182,28 +216,48 @@ void AV4Wheel::diffMove(boolean i, int s){
     }
 }
 
+void AV4Wheel::_interrupEncoderFunc(){
+    _interruptTickCounter++;
+}
+
+int AV4Wheel::getInterrupTicks(){
+    return _interruptTickCounter;
+}
+
 void AV4Wheel::_encoderDist(float d){
     _encoderPrevVal = LOW;
     int tickToTurn = ((d)/(_wheelCircumfrence))*(TICKS_PER_ROTATION);
-    int ticksTurned = 0;
-    while(ticksTurned < tickToTurn){
-        int n = digitalRead(_encoderPin);
-        if ((_encoderPrevVal == LOW) && (n == HIGH)) {
-            ticksTurned ++;
-        } 
-        _encoderPrevVal = n;
+    _encoderTicks(tickToTurn);
+}
+
+void AV4Wheel::_encoderTicks(int t){
+    if(_usingInterruptEncoder){
+        _interruptTickCounter = 0;
+        while(_interruptTickCounter < t){
+            _usingInterruptEncoder = true;
+        }
+    }
+    else{
+        int ticksTurned = 0;
+        while(ticksTurned < t){
+            int n = digitalRead(_encoderPin);
+            if ((_encoderPrevVal == LOW) && (n == HIGH)) {
+                ticksTurned ++;
+            } 
+            _encoderPrevVal = n;
+        }
     }
 }
 
 void AV4Wheel::stopMotion(int t){
     if(_mode == 1 || _mode == 2){
         digitalWrite(_motor1A, LOW);
-        digitalWrite(_motor1B, LOW);
+        analogWrite(_motor1B, 0);
     }
     
     if(_mode == 1){
         digitalWrite(_motor2A,LOW);
-        digitalWrite(_motor2B,LOW);
+        analogWrite(_motor2B,0);
     }
     
     if(_mode == 3){

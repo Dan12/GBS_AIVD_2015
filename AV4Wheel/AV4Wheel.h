@@ -21,6 +21,10 @@ class AV4Wheel{
         int getUltraIn();
         void diffMove(boolean i, int s);
         void stopMotion(int t);
+        void rampMotion(int s, int e, int st, int de, boolean r);
+        void moveRampMotion(int s, int e, int st, float de, int di, boolean r, boolean dn);
+        void _interrupEncoderFunc();
+        int getInterrupTicks();
     private:
         int _motor1A;
         int _motor1B;
@@ -35,12 +39,14 @@ class AV4Wheel{
         float _wheelCircumfrence;
         Servo _steeringServo;
         void _encoderDist(float d);
+        void _encoderTicks(int t);
         int _ping_in();
         uint8_t _triggerBit;
         uint8_t _echoBit;
         volatile uint8_t *_triggerOutput;
         volatile uint8_t *_triggerMode;
         volatile uint8_t *_echoInput;
+        boolean _usingInterruptEncoder;
         unsigned int _maxEchoTime;
         unsigned long _max_time;
         boolean ping_trigger();

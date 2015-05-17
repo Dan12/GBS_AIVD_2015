@@ -1,7 +1,6 @@
 //include Servo and 4WheelDrive Library
 #include <Servo.h>
 #include <AV4Wheel.h>
-#include <NewPing.h>
 
 //Creating 4WheelDrive object
 AV4Wheel test;

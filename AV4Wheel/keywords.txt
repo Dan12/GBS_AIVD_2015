@@ -7,3 +7,6 @@ moveUltra	KEYWORD2
 getUltraIn	KEYWORD2
 diffMove    KEYWORD2
 stopMotion  KEYWORD2
+rampMotion	KEYWORD2
+getInterrupTicks	KEYWORD2
+moveRampMotion	KEYWORD2
