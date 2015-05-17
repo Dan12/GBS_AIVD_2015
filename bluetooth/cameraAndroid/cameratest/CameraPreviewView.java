@@ -43,6 +43,7 @@ public class CameraPreviewView extends SurfaceView implements Callback, Camera.P
     NumberSlider showCircleSlider;
     NumberSlider showMenuSlider;
     NumberSlider connectSlider;
+    NumberSlider radiusStopSlider;
     
     ArrayList<HighlightedPixels> hpArray;
     HighlightedCircle hC;
@@ -57,6 +58,8 @@ public class CameraPreviewView extends SurfaceView implements Callback, Camera.P
     boolean sendData = false;
 
     boolean menuView = false;
+
+    int stopRadiusSize = 125;
     
     public CameraPreviewView(Context context, AttributeSet attrs) {
     	super(context, attrs);
@@ -81,6 +84,7 @@ public class CameraPreviewView extends SurfaceView implements Callback, Camera.P
         showSquareSlider = new NumberSlider(0, 1, 0, 300, 130, 150, 40, "Show Squares");
         showCircleSlider = new NumberSlider(0, 1, 1, 300, 230, 150, 40, "Show Circle");
         showMenuSlider = new NumberSlider(0, 1, 0, 650, 30, 150, 40, "Show Menu");
+        radiusStopSlider = new NumberSlider(10,240,125,300,330,150,40,"Stop Radius");
     }
 
     @Override
@@ -91,7 +95,7 @@ public class CameraPreviewView extends SurfaceView implements Callback, Camera.P
         setSimilar(targetColor);
         
         System.out.println("Draw Stuff");
-        System.out.println("Width: "+width+", cx: "+hC.cCXPos);
+        //System.out.println("Width: "+width+", cx: "+hC.cCXPos);
         
         //draw bitmap of pixels from camera
         canvas.drawBitmap(rgbints, 0, width, 0, 0, width, height, false, null);
@@ -119,6 +123,8 @@ public class CameraPreviewView extends SurfaceView implements Callback, Camera.P
             drawResolution = resolutionSlider.sVal;
             zoomSlider.drawSlider(canvas);
             clearNoiseSlider.drawSlider(canvas);
+            radiusStopSlider.drawSlider(canvas);
+            stopRadiusSize = radiusStopSlider.sVal;
             if (clearNoiseSlider.sVal > 0)
                 willClearNoise = true;
             else
@@ -137,6 +143,23 @@ public class CameraPreviewView extends SurfaceView implements Callback, Camera.P
         }
 
         showMenuSlider.drawSlider(canvas);
+
+        paint.setColor(Color.BLACK);
+        String charSent = "";
+        if(hC.cRadius > stopRadiusSize)
+            charSent = "s";
+        else if (hC.cCXPos < (width / 2) - CameraMain.centerTolerance)
+            charSent = "l";
+        else if (hC.cCXPos > (width / 2) + CameraMain.centerTolerance)
+            charSent = "r";
+        else if (hC.cCXPos < (width / 2) - CameraMain.centerTolerance/2)
+            charSent = "d";
+        else if (hC.cCXPos > (width / 2) + CameraMain.centerTolerance/2)
+            charSent = "g";
+        else
+            charSent = "f";
+        paint.setTextSize(24);
+        canvas.drawText("Char Sent: "+charSent,650,130,paint);
         
         super.invalidate();
     }
@@ -169,6 +192,7 @@ public class CameraPreviewView extends SurfaceView implements Callback, Camera.P
             showSquareSlider.touchSlider(x, y);
             showCircleSlider.touchSlider(x, y);
             connectSlider.touchSlider(x, y);
+            radiusStopSlider.touchSlider(x, y);
         }
     }
     
@@ -184,6 +208,7 @@ public class CameraPreviewView extends SurfaceView implements Callback, Camera.P
             showSquareSlider.touchSlider(x, y);
             showCircleSlider.touchSlider(x, y);
             connectSlider.touchSlider(x, y);
+            radiusStopSlider.touchSlider(x, y);
         }
     }
 

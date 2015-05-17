@@ -32,7 +32,7 @@ public class CameraMain extends Activity
     InputStream mmInputStream;
     Thread workerThread;
     volatile boolean stopWorker;
-    int centerTolerance = 100;
+    static int centerTolerance = 100;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) 
@@ -140,7 +140,9 @@ public class CameraMain extends Activity
                 while(!Thread.currentThread().isInterrupted() && !stopWorker){
                     try {
                         if(surfaceView.sendData == true) {
-                            if (surfaceView.hC.cCXPos < (surfaceView.width / 2) - centerTolerance)
+                            if(surfaceView.hC.cRadius > surfaceView.stopRadiusSize)
+                                sendData("s");
+                            else if (surfaceView.hC.cCXPos < (surfaceView.width / 2) - centerTolerance)
                                 sendData("l");
                             else if (surfaceView.hC.cCXPos > (surfaceView.width / 2) + centerTolerance)
                                 sendData("r");

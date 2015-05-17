@@ -7,7 +7,18 @@ int RxD = 3;
 
 SoftwareSerial bluetooth(TxD, RxD);
 
-AV4Wheel avproto;
+AV4Wheel aivdCar;
+
+const int center = 95;
+const int addAngle = 20;
+const int subAngle = 30;
+const int buttonPin = 12;
+const int buttonInputType = INPUT_PULLUP;
+const int maxSpeed = 125;
+
+int maxDistance = 200;
+int distance = maxDistance;
+int stoppingDistance = 60;
 
 void setup(){
   //Setup usb serial connection to computer
@@ -22,7 +33,11 @@ void setup(){
   bluetooth.setTimeout(20);
   
   //Parameters: Motor pin a, Encoder pin, Steering Servo pin, Wheel Circumfrenc (in inches)
-  avproto.init(11,7,9, 4*3.14);
+  aivdCar.init(13,11,5,6, 3.14*12.0);
+  aivdCar.setServo(center);
+  //Parameters: Trigger Pin, Echo Pin, Max Distance (cm)
+  aivdCar.initUltra(10, 10, maxDistance);
+  aivdCar.rampMotion(0,maxSpeed/2,1,5,false);
 }
 
 void loop()
@@ -32,20 +47,26 @@ void loop()
     char c = bluetooth.read();
     Serial.println(c);
     if(c == 'f'){
-      avproto.setServo(90);
+      aivdCar.setServo(center);
     }
     else if(c == 'r'){
-      avproto.setServo(125);
+      aivdCar.setServo(center-subAngle);
     }
     else if(c == 'g'){
-      avproto.setServo(110);
+      aivdCar.setServo(center-subAngle/2);
     }
     else if(c == 'l'){
-      avproto.setServo(55);
+      aivdCar.setServo(center+addAngle);
     }
     else if(c == 'd'){
-      avproto.setServo(70);
+      aivdCar.setServo(center+addAngle/2);
     }
-    avproto.diffMove(false,230);
+    if(c == 's'){
+      aivdCar.diffMove(false,0);
+    }
+    else if(distance > stoppingDistance){
+      aivdCar.diffMove(false,maxSpeed/2);
+    }
   }
+  distance = aivdCar.getUltraIn();
 }

@@ -16,8 +16,8 @@ public class DrawingView extends View{
 	int touchX;
 	int touchY;
 	
-	int knobXDisp = 0;
-	int knobYDisp = 0;
+	int knobXDisp = -10;
+	int knobYDisp = -10;
 	
 	int winWidth;
 	int winHeight;
@@ -223,6 +223,12 @@ public class DrawingView extends View{
 			if(Math.sqrt(Math.pow(touchX-circCentX, 2)+Math.pow(touchY-circCentY, 2)) < cicleRad-cicleRad*0.15){
 				knobXDisp = touchX-circCentX;
 				knobYDisp = touchY-circCentY;
+			}
+			else if(touchX > 0 && touchY > 0){
+				double theta = Math.atan2(touchX-circCentX,touchY-circCentY);
+				theta-=Math.PI/2;
+				knobXDisp = (int) (Math.cos(theta)*(cicleRad-cicleRad*0.15));
+				knobYDisp = (int) (Math.sin(-theta)*(cicleRad-cicleRad*0.15));
 			}
 			else{
 				knobXDisp = 0;
