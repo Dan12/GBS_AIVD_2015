@@ -21,6 +21,7 @@ void setup(){
   attachInterrupt(0, interruptFunc, RISING);
   
   pinMode(buttonPin,buttonInputType);
+  Serial.begin(9600);
 }
 
 void loop(){
@@ -31,6 +32,7 @@ void loop(){
     //time(milliseconds);
     test.stopMotion(200);
   }
+  Serial.println(test.getInterrupTicks());
 }
 
 void interruptFunc(){
