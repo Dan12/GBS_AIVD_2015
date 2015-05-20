@@ -1,0 +1,52 @@
+2014 Main Car Main Board:
+2-Interrupt in
+3-Encoder A
+4-Encoder B
+5-All Motors PMW
+6-Siren
+7-Left Back Motor Direction
+8-Left Front Motor Direction
+9-Right Front Motor Direction
+10-Right Back Motor Direction
+A5-IC2 Bus
+A4-IC2 Bus
+
+2014 Main Car Ultrasonic Board:
+7-Front Ultrasonic Trigger/Echo
+8-Interrupt out
+A5-IC2 Bus
+A4-IC2 Bus
+
+2015 Prototype:
+2 = Encoder
+3 = Bluetooth RX
+4 = Back Ultrasonic Trigger
+5 = Back Ultrasonic Echo
+6 = Front Ultrasonic Trigger
+7 = Front Ultrasonic Echo
+8 = Front Left Ultrasonic Trigger
+10 = Motor Signal
+11 = Servo Signal
+12 = Front Left Ultrasonic Echo
+A0 = Button
+A1 = Bluetooth TX
+
+2015 Main Car:
+0-GPS RX
+1-GPS TX
+4-Bluetooth RX
+5-Bluetooth TX
+6-Steering Servo Signal
+7-Right Ultrasonic Trigger
+8-Right Ultrasonic Echo
+9-Back Ultrasonic Trigger/Echo
+10-Button
+11-Motor PMW
+12-Front Ultrasonic Trigger/Echo
+13-Motor Direction
+A5-Compass SCL
+A4-Compass SDA
+A3-Front Ultrasonic Holder Servo Signal
+A2-Encoder
+A1-Left Ultrasonic Trigger
+A0-Left Ultrasonic Echo

@@ -13,7 +13,7 @@ AV4Wheel ultras[NumUltras] = {
 };
 
 int triggerPins[NumUltras] = {7,A1,12,9};
-int echoPins[NumUltras] = {8,A0,12,9);
+int echoPins[NumUltras] = {8,A0,12,9};
 
 //Max distance in cm
 int maxDistance = 200;

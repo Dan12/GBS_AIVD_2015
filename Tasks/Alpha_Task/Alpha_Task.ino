@@ -33,7 +33,7 @@ void loop(){
     test.move(false,maxSpeed,center+addAngle,12.0*7.6,0);
     test.move(false,maxSpeed,center-subAngle,12.0*7.6,0);
     //set servo
-    test.setServo(center+exxagerate);
+    test.setServo(center+exaggerate);
     //start,end,step,delay,reverse
     test.rampMotion(maxSpeed,0,1,20,false);
     //time(milliseconds);
