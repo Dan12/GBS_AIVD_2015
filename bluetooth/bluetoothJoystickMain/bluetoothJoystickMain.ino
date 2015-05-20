@@ -16,6 +16,7 @@ int knobY = 0;
 
 int prevSpeed = 0;
 int maxSpeedUp = 2;
+boolean prevReverse = false;
 
 int distScale = 2;
 
@@ -98,13 +99,18 @@ void setMotion(){
     moveAngle = constrain(map(knobX,0,200,center,center+addAngle),center,center+addAngle);
   boolean reverse = moveSpeed < 0;
   moveSpeed = abs(moveSpeed);
-  if(abs(moveSpeed-prevSpeed) > maxSpeedUp){
-    if(moveSpeed-prevSpeed < 0)
+  if(abs(moveSpeed-prevSpeed) > maxSpeedUp || prevReverse != reverse){
+    if(moveSpeed-prevSpeed < 0 || prevReverse != reverse)
       moveSpeed = prevSpeed-maxSpeedUp;
     else
       moveSpeed = prevSpeed+maxSpeedUp;
   }
   prevSpeed = moveSpeed;
+  if(reverse != prevReverse){
+    if(moveSpeed != 0)
+      reverse = prevReverse;
+    prevReverse = reverse;
+  }
 //  Serial.print("*");
 //  Serial.print(knobX);
 //  Serial.print(moveAngle);
