@@ -4,8 +4,8 @@
 
 AV4Wheel aivdCar;
 
-int TxD = 2;
-int RxD = 3;
+int TxD = 5;
+int RxD = 4;
 
 int maxDistance = 200;
 int distance = maxDistance;
@@ -14,21 +14,25 @@ int angle = 90;
 int knobX = 0;
 int knobY = 0;
 
-int distScale = 5;
+int prevSpeed = 0;
+int maxSpeedUp = 2;
+
+int distScale = 2;
 
 SoftwareSerial bluetooth(TxD, RxD);
 
 Servo ultraServo;
-int ultraServoPin = 4;
+int ultraServoPin = A3;
 
 boolean returnMes = false;
 
-const int center = 95;
-const int addAngle = 20;
-const int subAngle = 30;
-const int buttonPin = 12;
+const int center = 97;
+const int addAngle = 21;
+const int subAngle = 25.5;
+const int buttonPin = 10;
 const int buttonInputType = INPUT_PULLUP;
 const int maxSpeed = 125;
+const int exaggerate = 2;
 
 void setup(){
   //Setup usb serial connection to computer
@@ -43,10 +47,10 @@ void setup(){
   bluetooth.setTimeout(30);
   
   //Parameters: Motor pin a, Encoder pin, Steering Servo pin, Wheel Circumfrenc (in inches)
-  aivdCar.init(13,11,5,6, 3.14*12.0);
+  aivdCar.init(13,11,A2,6, 3.14*10.25);
   aivdCar.setServo(center);
   //Parameters: Trigger Pin, Echo Pin, Max Distance (cm)
-  aivdCar.initUltra(10, 10, maxDistance);
+  aivdCar.initUltra(12, 12, maxDistance);
   
   ultraServo.attach(ultraServoPin);
   ultraServo.write(90);
@@ -64,7 +68,7 @@ void loop()
     int data3 = bluetooth.parseInt();
     Serial.println(data3);
     angle = data1;
-    knobX = data2;
+    knobX = data2*-1;
     knobY = data3*-1;
     Serial.println("*");
     Serial.println(angle);
@@ -94,13 +98,22 @@ void setMotion(){
     moveAngle = constrain(map(knobX,0,200,center,center+addAngle),center,center+addAngle);
   boolean reverse = moveSpeed < 0;
   moveSpeed = abs(moveSpeed);
-  Serial.print("*");
-  Serial.print(knobX);
-  Serial.print(moveAngle);
-  Serial.println("*");
+  if(abs(moveSpeed-prevSpeed) > maxSpeedUp){
+    if(moveSpeed-prevSpeed < 0)
+      moveSpeed = prevSpeed-maxSpeedUp;
+    else
+      moveSpeed = prevSpeed+maxSpeedUp;
+  }
+  prevSpeed = moveSpeed;
+//  Serial.print("*");
+//  Serial.print(knobX);
+//  Serial.print(moveAngle);
+//  Serial.println("*");
   
   aivdCar.setServo(moveAngle);
   aivdCar.diffMove(reverse,moveSpeed);
+  
+  angle = map(angle,0,180,45,135);
   
   ultraServo.write(angle);
 }

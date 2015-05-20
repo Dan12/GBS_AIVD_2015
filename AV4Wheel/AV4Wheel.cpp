@@ -110,25 +110,21 @@ void AV4Wheel::initUltra(uint8_t trigger_pin, uint8_t echo_pin, int max_cm_dista
 void AV4Wheel::moveUltra(int d, boolean l, boolean i, int s, int deg){
     setServo(deg);
     
-    delay(200);
-    
     diffMove(i,s);
     
     int dist = _ping_in();
-    delay(29);
+    delay(50);
 
     if(l)
         while(dist < d && dist != 0){
             dist = _ping_in();
-            delay(29);
+            delay(50);
         }
     else
         while(dist > d || dist == 0){
             dist = _ping_in();
-            delay(29);
+            delay(50);
         }
-
-    stopMotion(500);
 }
 
 void AV4Wheel::rampMotion(int s, int e, int st, int de, boolean r){
