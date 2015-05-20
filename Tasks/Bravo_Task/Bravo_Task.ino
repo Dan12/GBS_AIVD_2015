@@ -17,9 +17,9 @@ void setup(){
     pinMode(buttonPin,buttonInputType);
     
     //Parameters: Motor pin a, Encoder pin, Steering Servo pin, Wheel Circumfrenc (in inches)
-    aivdCar.init(13,11,A2,6, 3.14*12.0);
+    aivdCar.init(13,11,A2,6, 3.14*10.25);
     //Parameters: Trigger Pin, Echo Pin, Max Distance (cm)
-    aivdCar.initUltra(10, 10, 200);
+    aivdCar.initUltra(12, 12, 200);
 }
 
 void loop(){

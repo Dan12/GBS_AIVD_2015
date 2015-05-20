@@ -3,6 +3,8 @@
 #include <Wire.h>
 #include <SoftwareSerial.h>
 #include <TinyGPS.h>
+#include <Servo.h>
+#include <AV4Wheel.h>
 
 #define Addr 0x1E 
 
@@ -31,6 +33,16 @@ TinyGPS gps;
 
 SoftwareSerial uart_gps(RXPIN, TXPIN);
 
+AV4Wheel aivdCar;
+
+const int center = 97;
+const int addAngle = 21;
+const int subAngle = 25.5;
+const int buttonPin = 10;
+const int buttonInputType = INPUT_PULLUP;
+const int maxSpeed = 150;
+const int exaggerate = 2;
+
 void getgps(TinyGPS &gps);
 
 void setup()
@@ -46,7 +58,10 @@ void setup()
 
   uart_gps.begin(GPSBAUD);
 
-  pinMode(12,INPUT);
+  pinMode(buttonPin,buttonInputType);
+  
+  aivdCar.init(13,11,A2,6, 3.14*10.25);
+  aivdCar.setServo(center);
 
   Serial.println("");
   Serial.println("GPS Shield QuickStart Example Sketch v12");
@@ -100,7 +115,16 @@ void loop()
       
       Serial.println("\\");
       
+      aivdCar.rampMotion(0,maxSpeed,1,20,false);
       //move code here
+      if(gotoangle > curangle){
+        aivdCar.move(false,maxSpeed,center-subAngle,((12.0*7.6)/90.0)*(gotoangle-curangle),0);
+        aivdCar.move(false,maxSpeed,center+exaggerate,distance*12.0,0);
+      }
+      else{
+        aivdCar.move(false,maxSpeed,center+addAngle,((12.0*7.6)/90.0)*(curangle-gotoangle),0);
+        aivdCar.move(false,maxSpeed,center-exaggerate,distance*12.0,0);
+      }
       delay(1000);
     }
   }

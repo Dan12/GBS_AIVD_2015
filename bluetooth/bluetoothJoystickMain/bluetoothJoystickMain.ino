@@ -15,7 +15,7 @@ int knobX = 0;
 int knobY = 0;
 
 int prevSpeed = 0;
-int maxSpeedUp = 2;
+int maxSpeedUp = 3;
 boolean prevReverse = false;
 
 int distScale = 2;
@@ -32,7 +32,7 @@ const int addAngle = 21;
 const int subAngle = 25.5;
 const int buttonPin = 10;
 const int buttonInputType = INPUT_PULLUP;
-const int maxSpeed = 125;
+const int maxSpeed = 150;
 const int exaggerate = 2;
 
 void setup(){
@@ -94,27 +94,23 @@ void setMotion(){
   int moveSpeed = constrain(map(knobY,-200,200,-maxSpeed,maxSpeed),-maxSpeed,maxSpeed);
   int moveAngle = center;
   if(knobX < 0)
-    moveAngle = constrain(map(knobX,-200,0,center-subAngle,center),center-subAngle,center);
+    moveAngle = constrain(map(knobX,-150,0,center-subAngle,center),center-subAngle,center);
   else
-    moveAngle = constrain(map(knobX,0,200,center,center+addAngle),center,center+addAngle);  
+    moveAngle = constrain(map(knobX,0,150,center,center+addAngle),center,center+addAngle);  
   if(abs(moveSpeed-prevSpeed) > maxSpeedUp){
     if(moveSpeed-prevSpeed < 0)
       moveSpeed = prevSpeed-maxSpeedUp;
-    else
+    else 
       moveSpeed = prevSpeed+maxSpeedUp;
   }
   prevSpeed = moveSpeed;
   boolean reverse = moveSpeed < 0;
   moveSpeed = abs(moveSpeed);
-//  Serial.print("*");
-//  Serial.print(knobX);
-//  Serial.print(moveAngle);
-//  Serial.println("*");
   
   aivdCar.setServo(moveAngle);
   aivdCar.diffMove(reverse,moveSpeed);
   
-  angle = map(angle,0,180,45,135);
+  angle = constrain(angle,45,135);
   
   ultraServo.write(angle);
 }
