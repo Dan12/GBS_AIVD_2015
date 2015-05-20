@@ -25,9 +25,9 @@ A4-IC2 Bus
 6 = Front Ultrasonic Trigger
 7 = Front Ultrasonic Echo
 8 = Front Left Ultrasonic Trigger
-10 = Motor Signal
-11 = Servo Signal
+11 = Motor Signal
 12 = Front Left Ultrasonic Echo
+13 = Servo Signal
 A0 = Button
 A1 = Bluetooth TX
 
