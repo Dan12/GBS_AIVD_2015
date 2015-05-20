@@ -96,21 +96,16 @@ void setMotion(){
   if(knobX < 0)
     moveAngle = constrain(map(knobX,-200,0,center-subAngle,center),center-subAngle,center);
   else
-    moveAngle = constrain(map(knobX,0,200,center,center+addAngle),center,center+addAngle);
-  boolean reverse = moveSpeed < 0;
-  moveSpeed = abs(moveSpeed);
-  if(abs(moveSpeed-prevSpeed) > maxSpeedUp || prevReverse != reverse){
-    if(moveSpeed-prevSpeed < 0 || prevReverse != reverse)
+    moveAngle = constrain(map(knobX,0,200,center,center+addAngle),center,center+addAngle);  
+  if(abs(moveSpeed-prevSpeed) > maxSpeedUp){
+    if(moveSpeed-prevSpeed < 0)
       moveSpeed = prevSpeed-maxSpeedUp;
     else
       moveSpeed = prevSpeed+maxSpeedUp;
   }
   prevSpeed = moveSpeed;
-  if(reverse != prevReverse){
-    if(moveSpeed != 0)
-      reverse = prevReverse;
-    prevReverse = reverse;
-  }
+  boolean reverse = moveSpeed < 0;
+  moveSpeed = abs(moveSpeed);
 //  Serial.print("*");
 //  Serial.print(knobX);
 //  Serial.print(moveAngle);
