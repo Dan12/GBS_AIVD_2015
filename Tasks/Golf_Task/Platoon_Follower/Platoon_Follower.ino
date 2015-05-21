@@ -9,6 +9,8 @@ SoftwareSerial bluetooth(TxD, RxD);
 
 AV4Wheel aivdCar;
 
+Servo front;
+
 const int center = 97;
 const int addAngle = 21;
 const int subAngle = 25.5;
@@ -23,9 +25,11 @@ int stoppingDistance = 30;
 
 boolean atTopSpeed = false;
 int speedAt = 0;
-int speedChange = 4;
+int speedChange = 1;
 int speedChangeTimes = 4;
-int speedChangeDelay = 20;
+int speedChangeDelay = 15;
+
+boolean isMoving = false;
 
 void setup(){
   //Setup usb serial connection to computer
@@ -44,13 +48,19 @@ void setup(){
   aivdCar.setServo(center);
   //Parameters: Trigger Pin, Echo Pin, Max Distance (cm)
   aivdCar.initUltra(12, 12, maxDistance);
-  aivdCar.rampMotion(0,maxSpeed,1,5,false);
-  atTopSpeed = true;
-  speedAt = maxSpeed;
+  pinMode(buttonPin,buttonInputType);
+  front.attach(A3);
+  front.write(90);
 }
 
 void loop()
 {
+  if(digitalRead(buttonPin) == LOW){
+    isMoving = true;
+    aivdCar.rampMotion(0,maxSpeed,1,15,false);
+    atTopSpeed = true;
+    speedAt = maxSpeed;
+  }
   //Read from bluetooth and write to usb serial
   if(bluetooth.available()){
     char c = bluetooth.read();
@@ -71,36 +81,38 @@ void loop()
       aivdCar.setServo(center+addAngle/2);
     }
     
-    //go
-    if(distance > stoppingDistance && c != 's'){
-      if(atTopSpeed)
-        aivdCar.diffMove(false,maxSpeed);
-      else{
-        for(int i = 0; i < speedChangeTimes; i++){
-          speedAt+=speedChange;
-          if(speedAt>maxSpeed)
-            speedAt = maxSpeed;
-          aivdCar.diffMove(false,speedAt);
-          delay(speedChangeDelay);
+    if(isMoving){
+      //go
+      if(distance > stoppingDistance && c != 's'){
+        if(atTopSpeed)
+          aivdCar.diffMove(false,maxSpeed);
+        else{
+          for(int i = 0; i < speedChangeTimes; i++){
+            speedAt+=speedChange;
+            if(speedAt>maxSpeed)
+              speedAt = maxSpeed;
+            aivdCar.diffMove(false,speedAt);
+            delay(speedChangeDelay);
+          }
+          if(speedAt >= maxSpeed)
+            atTopSpeed = true;
         }
-        if(speedAt >= maxSpeed)
-          atTopSpeed = true;
       }
-    }
-    //stop
-    else{
-      if(!atTopSpeed)
-        aivdCar.diffMove(false,0);
+      //stop
       else{
-        for(int i = 0; i < speedChangeTimes; i++){
-          speedAt-=speedChange;
-          if(speedAt<0)
-            speedAt = 0;
-          aivdCar.diffMove(false,speedAt);
-          delay(speedChangeDelay);
+        if(!atTopSpeed)
+          aivdCar.diffMove(false,0);
+        else{
+          for(int i = 0; i < speedChangeTimes; i++){
+            speedAt-=speedChange;
+            if(speedAt<0)
+              speedAt = 0;
+            aivdCar.diffMove(false,speedAt);
+            delay(speedChangeDelay);
+          }
+          if(speedAt <= 0)
+            atTopSpeed = false;
         }
-        if(speedAt <= 0)
-          atTopSpeed = false;
       }
     }
   }

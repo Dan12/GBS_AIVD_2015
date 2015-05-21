@@ -2,8 +2,8 @@
 
 #define Addr 0x1E               // 7-bit address of HMC5883 compass
 
-int xTrim = 0; //40
-int yTrim = 0; //150
+int xTrim = 0; //70
+int yTrim = 0; //109
 int angleTrim = 0;
 
 void setup() {

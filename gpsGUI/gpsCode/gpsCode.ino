@@ -13,17 +13,17 @@
 
 float latitude, longitude;
 
-float gotolat = 42.092642;
-float gotolong = -87.780817;
+float gotolat = 42.090070;
+float gotolong = -87.850336;
 
 float curangle;
 
 float xpos = 0.0;
 float ypos = 0.0;
 
-float xTrim = 40;
-float yTrim = 130;
-float angleTrim = -18;
+float xTrim = 70;
+float yTrim = 109;
+float angleTrim = 180;
 
 boolean move1 = false;
 
