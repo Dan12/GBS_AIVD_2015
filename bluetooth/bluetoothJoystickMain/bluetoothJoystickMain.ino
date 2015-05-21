@@ -32,7 +32,7 @@ const int addAngle = 21;
 const int subAngle = 25.5;
 const int buttonPin = 10;
 const int buttonInputType = INPUT_PULLUP;
-const int maxSpeed = 150;
+const int maxSpeed = 175;
 const int exaggerate = 2;
 
 void setup(){
