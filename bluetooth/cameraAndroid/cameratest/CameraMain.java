@@ -142,9 +142,9 @@ public class CameraMain extends Activity
                         if(surfaceView.sendData == true) {
                             if(surfaceView.hC.cRadius > surfaceView.stopRadiusSize)
                                 sendData("s");
-                            else if (surfaceView.hC.cCXPos < (surfaceView.width / 2) - centerTolerance)
+                            else if (surfaceView.hC.cCXPos < (surfaceView.width / 2) - (centerTolerance+centerTolerance/2))
                                 sendData("l");
-                            else if (surfaceView.hC.cCXPos > (surfaceView.width / 2) + centerTolerance)
+                            else if (surfaceView.hC.cCXPos > (surfaceView.width / 2) + (centerTolerance+centerTolerance/2))
                                 sendData("r");
                             else if (surfaceView.hC.cCXPos < (surfaceView.width / 2) - centerTolerance/2)
                                 sendData("d");

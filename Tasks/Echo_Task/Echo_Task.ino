@@ -18,25 +18,9 @@ const int exaggerate = 2;
 
 int maxDistance = 200;
 
-/*
-4 = b trig
-5 = b echo
-6 = f trig
-7 = f echo
-8 = fl trig
-12 = fl echo
-11 = motor
-13 = servo
-2 = encoder
-A0 = button
-A1 = blubtuth module TX
-3 = blubtuth module RX
-*/
-
 //Front,back, right
 int triggerPins[NumUltras] = {12,9,7};
 int echoPins[NumUltras] = {12,9,8};
-
 
 void setup() {
   //Parameters: Motor pin a, Encoder pin, Steering Servo pin, Wheel Circumfrenc (in inches)

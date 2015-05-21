@@ -62,7 +62,7 @@ public class CameraPreviewView extends SurfaceView implements Callback, Camera.P
     boolean menuView = false;
 
     int colorAppeared = -1;
-    int minArea = 100;
+    int minArea = 4000;
 
     int gyrTouched = 0;
     

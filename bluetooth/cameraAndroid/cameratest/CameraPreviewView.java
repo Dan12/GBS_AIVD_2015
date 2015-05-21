@@ -148,9 +148,9 @@ public class CameraPreviewView extends SurfaceView implements Callback, Camera.P
         String charSent = "";
         if(hC.cRadius > stopRadiusSize)
             charSent = "s";
-        else if (hC.cCXPos < (width / 2) - CameraMain.centerTolerance)
+        else if (hC.cCXPos < (width / 2) - (CameraMain.centerTolerance+CameraMain.centerTolerance/2))
             charSent = "l";
-        else if (hC.cCXPos > (width / 2) + CameraMain.centerTolerance)
+        else if (hC.cCXPos > (width / 2) + (CameraMain.centerTolerance+CameraMain.centerTolerance/2))
             charSent = "r";
         else if (hC.cCXPos < (width / 2) - CameraMain.centerTolerance/2)
             charSent = "d";

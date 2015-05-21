@@ -21,9 +21,8 @@ const int exaggerate = 2;
 
 int maxDistance = 200;
 int distance = maxDistance;
-int stoppingDistance = 20;
+int stoppingDistance = 26;
 
-boolean atTopSpeed = false;
 int speedAt = 0;
 int speedChange = 1;
 int speedChangeTimes = 3;
@@ -58,7 +57,6 @@ void loop()
   if(digitalRead(buttonPin) == LOW && !isMoving){
     isMoving = true;
     aivdCar.rampMotion(0,maxSpeed,1,20,false);
-    atTopSpeed = true;
     speedAt = maxSpeed;
   }
   //Read from bluetooth and write to usb serial
@@ -83,8 +81,8 @@ void loop()
     
     if(isMoving){
       //go
-      if(distance > stoppingDistance && c != 's'){
-        if(atTopSpeed)
+      if((distance > stoppingDistance || distance == 0) && c != 's'){
+        if(speedAt == maxSpeed)
           aivdCar.diffMove(false,maxSpeed);
         else{
           for(int i = 0; i < speedChangeTimes; i++){
@@ -94,13 +92,11 @@ void loop()
             aivdCar.diffMove(false,speedAt);
             delay(speedChangeDelay);
           }
-          if(speedAt >= maxSpeed)
-            atTopSpeed = true;
         }
       }
       //stop
       else{
-        if(!atTopSpeed)
+        if(speedAt == 0)
           aivdCar.diffMove(false,0);
         else{
           for(int i = 0; i < speedChangeTimes; i++){
@@ -110,8 +106,6 @@ void loop()
             aivdCar.diffMove(false,speedAt);
             delay(speedChangeDelay);
           }
-          if(speedAt <= 0)
-            atTopSpeed = false;
         }
       }
     }
