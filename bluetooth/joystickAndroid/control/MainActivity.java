@@ -1,4 +1,4 @@
-package com.example.control;
+package com.dantech.control;
 
 import java.io.IOException;
 import java.io.InputStream;

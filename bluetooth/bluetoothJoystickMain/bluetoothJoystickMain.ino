@@ -94,9 +94,9 @@ void setMotion(){
   int moveSpeed = constrain(map(knobY,-200,200,-maxSpeed,maxSpeed),-maxSpeed,maxSpeed);
   int moveAngle = center;
   if(knobX < 0)
-    moveAngle = constrain(map(knobX,-150,0,center-subAngle,center),center-subAngle,center);
+    moveAngle = constrain(map(knobX,-200,0,center-subAngle,center),center-subAngle,center);
   else
-    moveAngle = constrain(map(knobX,0,150,center,center+addAngle),center,center+addAngle);  
+    moveAngle = constrain(map(knobX,0,200,center,center+addAngle),center,center+addAngle);  
   if(abs(moveSpeed-prevSpeed) > maxSpeedUp){
     if(moveSpeed-prevSpeed < 0)
       moveSpeed = prevSpeed-maxSpeedUp;

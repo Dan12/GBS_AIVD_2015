@@ -1,4 +1,4 @@
-package com.example.control;
+package com.dantech.control;
 
 import java.util.Random;
 import android.content.Context;
@@ -22,9 +22,10 @@ public class DrawingView extends View{
 	int winWidth;
 	int winHeight;
 	
-	int cicleRad;
-	int circCentX;
-	int circCentY;
+	int squareHalfSide;
+	int centerCircleX;
+	int centerCircleY;
+
 	
 	int sliderLineY;
 	int sliderLineHeight;
@@ -104,29 +105,29 @@ public class DrawingView extends View{
 		
 		updateTouch();
 		
-		//big circle
+		//big square
 		paint.setColor(Color.BLACK);
-		canvas.drawCircle(circCentX, circCentY, cicleRad, paint);
+		canvas.drawRect(centerCircleX - squareHalfSide, centerCircleY - squareHalfSide, centerCircleX + squareHalfSide, centerCircleY + squareHalfSide, paint);
 		paint.setColor(Color.WHITE);
-		canvas.drawCircle(circCentX, circCentY, cicleRad-4, paint);
+		canvas.drawRect(centerCircleX + 4 - squareHalfSide, centerCircleY + 4 - squareHalfSide, centerCircleX + squareHalfSide - 4, centerCircleY + squareHalfSide - 4, paint);
 		//small circle
 		paint.setColor(Color.BLACK);
-		canvas.drawCircle(circCentX, circCentY, (float) (cicleRad*0.2), paint);
+		canvas.drawCircle(centerCircleX, centerCircleY, (float) (squareHalfSide *0.2), paint);
 		//knob circle
 		paint.setColor(Color.BLACK);
-		canvas.drawCircle(circCentX+knobXDisp, circCentY+knobYDisp, (float) (cicleRad*0.15), paint);
+		canvas.drawCircle(centerCircleX +knobXDisp, centerCircleY +knobYDisp, (float) (squareHalfSide *0.15), paint);
 		//knob connector line
 		double knobAngle = Math.atan2(knobXDisp,-knobYDisp) * (180/Math.PI) + 180;
 		knobAngle = Math.toRadians(knobAngle);
 		knobPath.reset();
-		knobPath.moveTo((float) (circCentX+(cicleRad*0.2*Math.cos(knobAngle))), (float) (circCentY+(cicleRad*0.2*Math.sin(knobAngle))));
-		knobPath.lineTo((float) (circCentX+knobXDisp), circCentY+knobYDisp);
-		//knobPath.lineTo((float) (circCentX+knobXDisp+cicleRad*0.15), (circCentY)+knobYDisp);
-		knobPath.lineTo((float) (circCentX+(cicleRad*0.2*Math.cos(knobAngle+Math.PI))), (float) (circCentY+(cicleRad*0.2*Math.sin(knobAngle+Math.PI))));
+		knobPath.moveTo((float) (centerCircleX +(squareHalfSide *0.2*Math.cos(knobAngle))), (float) (centerCircleY +(squareHalfSide *0.2*Math.sin(knobAngle))));
+		knobPath.lineTo((float) (centerCircleX +knobXDisp), centerCircleY +knobYDisp);
+		//knobPath.lineTo((float) (centerCircleX+knobXDisp+squareHalfSide*0.15), (centerCircleY)+knobYDisp);
+		knobPath.lineTo((float) (centerCircleX +(squareHalfSide *0.2*Math.cos(knobAngle+Math.PI))), (float) (centerCircleY +(squareHalfSide *0.2*Math.sin(knobAngle+Math.PI))));
 		canvas.drawPath(knobPath, paint);
 		//knob
 		paint.setColor(Color.BLUE);
-		canvas.drawCircle(circCentX+knobXDisp, circCentY+knobYDisp, (float) (cicleRad*0.2)-4, paint);
+		canvas.drawCircle(centerCircleX +knobXDisp, centerCircleY +knobYDisp, (float) (squareHalfSide *0.2)-4, paint);
 		
 		//slider
 		paint.setColor(Color.argb(255, 210, 210, 210));
@@ -220,15 +221,17 @@ public class DrawingView extends View{
 	
 	public void updateTouch(){
 		if(!settingsScreen){
-			if(Math.sqrt(Math.pow(touchX-circCentX, 2)+Math.pow(touchY-circCentY, 2)) < cicleRad-cicleRad*0.15){
-				knobXDisp = touchX-circCentX;
-				knobYDisp = touchY-circCentY;
-			}
-			else if(touchX > 0 && touchY > 0){
-				double theta = Math.atan2(touchX-circCentX,touchY-circCentY);
-				theta-=Math.PI/2;
-				knobXDisp = (int) (Math.cos(theta)*(cicleRad-cicleRad*0.15));
-				knobYDisp = (int) (Math.sin(-theta)*(cicleRad-cicleRad*0.15));
+			if(touchY > winHeight-winWidth){
+				if(touchX < squareHalfSide*0.15)
+					touchX = (int) (squareHalfSide*0.15);
+				if(touchX > winWidth-squareHalfSide*0.15)
+					touchX = (int) (winWidth-squareHalfSide*0.15);
+				if(touchY < (winHeight-winWidth)+squareHalfSide*0.15)
+					touchY = (int) ((winHeight-winWidth)+squareHalfSide*0.15);
+				if(touchY > winHeight-squareHalfSide*0.15)
+					touchY = (int) (winHeight-squareHalfSide*0.15);
+				knobXDisp = touchX - centerCircleX;
+				knobYDisp = touchY - centerCircleY;
 			}
 			else{
 				knobXDisp = 0;
@@ -243,11 +246,11 @@ public class DrawingView extends View{
 	public void setDim(int width, int height) {
 		winWidth = width;
 		winHeight = height;
-		cicleRad = (winWidth - 40)/2;
-		circCentX = winWidth/2;
-		circCentY = winHeight-20-cicleRad;
-		sliderLineY = winHeight-40-cicleRad*2;
-		sliderLineHeight = (int) (cicleRad*0.2);
+		squareHalfSide = (winWidth - 40)/2;
+		centerCircleX = 20+squareHalfSide;
+		centerCircleY = winHeight-20-squareHalfSide;
+		sliderLineY = winHeight-40- squareHalfSide *2;
+		sliderLineHeight = (int) (squareHalfSide *0.2);
 		sliderLineWidth = winWidth - 60;
 		sliderX = winWidth/2;
 		sliderWidth = (sliderLineHeight-10)/2;
