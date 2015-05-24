@@ -3,6 +3,7 @@
 #include <AV4Wheel.h>
 
 AV4Wheel aivdCar;
+Servo front;
 
 const int center = 97;
 const int addAngle = 21;
@@ -20,6 +21,9 @@ void setup(){
     aivdCar.init(13,11,A2,6, 3.14*10.25);
     //Parameters: Trigger Pin, Echo Pin, Max Distance (cm)
     aivdCar.initUltra(12, 12, 200);
+    front.attach(A3);
+    front.write(90);
+    aivdCar.setServo(center);
 }
 
 void loop(){

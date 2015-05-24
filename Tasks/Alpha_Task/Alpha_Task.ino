@@ -5,7 +5,7 @@
 //Creating 4WheelDrive object
 AV4Wheel test;
 
-const int center = 97;
+const int center = 91;
 const int addAngle = 21;
 const int subAngle = 25.5;
 const int buttonPin = 10;
@@ -29,11 +29,11 @@ void loop(){
     test.rampMotion(0,maxSpeed,1,20,false);
     //Parameters: Invert Motion, Speed/PMW Cycle to motor(0-255), Steering Servo angle, distance (in inches), time (in miliseconds)
     //If the distance is 0, then it will move for the specified time and vice versa; if both time and distance are set to 0 or not set to 0, then nothing will happen
-    test.move(false,maxSpeed,center,12.0*7.0,0);
-    test.move(false,maxSpeed,center+addAngle,12.0*7.6,0);
-    test.move(false,maxSpeed,center-subAngle,12.0*7.6,0);
+    test.move(false,maxSpeed,center-6,12.0*35.0,0);
+    //test.move(false,maxSpeed,center+addAngle,12.0*7.6,0);
+    //test.move(false,maxSpeed,center-subAngle,12.0*7.6,0);
     //set servo
-    test.setServo(center+exaggerate);
+    //test.setServo(center+exaggerate);
     //start,end,step,delay,reverse
     test.rampMotion(maxSpeed,0,1,20,false);
     //time(milliseconds);

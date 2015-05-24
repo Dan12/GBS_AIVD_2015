@@ -26,7 +26,7 @@ int stoppingDistance = 26;
 int speedAt = 0;
 int speedChange = 1;
 int speedChangeTimes = 3;
-int speedChangeDelay = 25;
+int speedChangeDelay = 20;
 
 boolean isMoving = false;
 

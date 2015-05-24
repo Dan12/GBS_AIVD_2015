@@ -15,7 +15,8 @@ boolean move1 = false;
 
 int moveTimes = 10;
 
-const int delayRunTime = 2000;
+const int turnRunTime = 1000;
+const int fwdRunTime = 3000;
 
 const int waitTime = 1000;
 
@@ -44,17 +45,17 @@ void loop() {
       int action = random(0,2);
       //turn right
       if(action == 0){
-        moveWheels(false,true,false,true);
+        moveWheels(false,true,false,true,turnRunTime);
       }
       //turn left
       else{
-        moveWheels(true,false,true,false);
+        moveWheels(true,false,true,false,turnRunTime);
       }
       //forward
-      moveWheels(true,true,true,true);
+      moveWheels(true,true,true,true,fwdRunTime);
       action = random(0,2);
       while(action == 0){
-        moveWheels(true,true,true,true);
+        moveWheels(true,true,true,true,fwdRunTime);
         action = random(0,2);
       }
       timesMoved++;
@@ -62,14 +63,14 @@ void loop() {
   }
 }
 
-void moveWheels(boolean rf, boolean lf, boolean rb, boolean lb){
+void moveWheels(boolean rf, boolean lf, boolean rb, boolean lb, int d){
   digitalWrite(lBackPin,lb);
   digitalWrite(lFrontPin,lf);
   digitalWrite(rFrontPin,rf);
   digitalWrite(rBackPin,rb);
   analogWrite(speedPin, wheelSpeed);
   
-  delay(delayRunTime);
+  delay(d);
   pause();
   delay(waitTime);
 }

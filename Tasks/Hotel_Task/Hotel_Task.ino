@@ -15,8 +15,8 @@
 
 float latitude, longitude;
 
-float gotolat = 42.090070;
-float gotolong = -87.850336;
+float gotolat = 42.33601760;
+float gotolong = -82.99694061;
 
 float curangle;
 
@@ -35,13 +35,13 @@ SoftwareSerial uart_gps(RXPIN, TXPIN);
 
 AV4Wheel aivdCar;
 
-const int center = 97;
-const int addAngle = 21;
-const int subAngle = 25.5;
+const int center = 91;
+const int addAngle = 24;
+const int subAngle = 28.5;
 const int buttonPin = 10;
 const int buttonInputType = INPUT_PULLUP;
-const int maxSpeed = 150;
-const int exaggerate = 2;
+const int maxSpeed = 125;
+const int exaggerate = 1;
 
 void getgps(TinyGPS &gps);
 
@@ -60,7 +60,7 @@ void setup()
 
   pinMode(buttonPin,buttonInputType);
   
-  aivdCar.init(13,11,A2,6, 3.14*10.25);
+  aivdCar.init(13,11,A2,6,3.14*10.25);
   aivdCar.setServo(center);
 
   Serial.println("");
@@ -115,6 +115,7 @@ void loop()
       
       Serial.println("\\");
       
+      aivdCar.setServo(97);
       aivdCar.rampMotion(0,maxSpeed,1,20,false);
       //move code here
       if(gotoangle > curangle){

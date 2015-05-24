@@ -8,7 +8,7 @@ AV4Wheel car;
 
 Servo front;
 
-const int center = 97;
+const int center = 91;
 const int addAngle = 21; //furthest it can turn left (center+) BRUUHH
 const int subAngle = 25.5; //furthest it can turn right ^^^ BRUHHHHHH
 const int buttonPin = 10;
@@ -31,7 +31,7 @@ void setup() {
     ultras[i].initUltra(triggerPins[i],echoPins[i],maxDistance);
   }*/
   car.init(13,11,A2,6, 3.14*10.25);
-  car.setServo(center);
+  car.setServo(97);
   
   Serial.begin(9600);
 }
@@ -59,7 +59,7 @@ void loop() {
       car.initUltra(triggerPins[0],echoPins[0],maxDistance);
       car.setServo(center-subAngle*0.65);
       car.rampMotion(0,maxSpeed/2,1,20,false);
-      car.moveUltra(30,false,false,maxSpeed/2,center-subAngle*0.65);
+      car.moveUltra(30,false,false,maxSpeed/2,center-subAngle*0.1);
       car.rampMotion(maxSpeed/2,0,1,20,false);
       car.setServo(center);
   }
