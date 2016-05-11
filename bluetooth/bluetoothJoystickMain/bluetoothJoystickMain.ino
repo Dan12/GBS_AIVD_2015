@@ -53,8 +53,8 @@ void setup(){
   //Parameters: Trigger Pin, Echo Pin, Max Distance (cm)
   aivdCar.initUltra(12, 12, maxDistance);
   
-  ultraServo.attach(ultraServoPin);
-  ultraServo.write(90);
+ // ultraServo.attach(ultraServoPin);
+ // ultraServo.write(90);
 }
 
 void loop()
@@ -108,11 +108,12 @@ void setMotion(){
   moveSpeed = abs(moveSpeed);
   
   aivdCar.setServo(moveAngle);
-  aivdCar.diffMove(reverse,moveSpeed);
+  if(!reverse)
+	  aivdCar.diffMove(reverse,moveSpeed);
   
   angle = constrain(angle,45,135);
   
-  ultraServo.write(angle);
+  //ultraServo.write(angle);
 }
 
 void sendInt(int d){
